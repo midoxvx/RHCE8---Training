@@ -1,0 +1,24 @@
+---
+- name: Messing around
+  hosts: all
+  vars:
+
+  tasks:
+    - block:
+        - name: Hello block
+          shell: "echo hello {{ansible_facts['distribution']}} > /tmp/hello"
+          register: echo_result
+        
+        - name: Debug reuslt
+          debug:
+            msg: | 
+              this is return code {{echo_result['rc']}} 
+              and this is standard output {{echo_result['stdout']}}
+        
+        - name: Lets use the lookup plugin
+          shell: "cat /tmp/hello"
+          register: cat_output
+
+        - name: lets cat it out
+          debug:
+            var: cat_output.stdout

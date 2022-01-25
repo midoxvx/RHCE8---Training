@@ -1,0 +1,19 @@
+---
+- name: haproxy
+  hosts: proxy
+  vars_files:
+    - vars/haproxy.yml
+  tasks:
+
+    - name: firewalld
+      firewalld:
+        port: 80/tcp
+        state: enabled
+        immediate: yes
+        permanent: yes
+
+
+    - name: incldue role
+      include_role:
+        name: geerlingguy.haproxy 
+

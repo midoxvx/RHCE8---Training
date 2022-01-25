@@ -1,0 +1,26 @@
+---
+- name: localfacts testing
+  hosts: managed-node-2
+  become: true
+  tasks:
+    
+
+    - name: stat facts.d
+      stat:
+        path: /etc/ansible/facts.d
+      register: statOut
+
+    - name: create local facts directory if it doesnt exists
+      file:
+        state: directory
+        path: /etc/ansible/facts.d
+      when: not statOut.stat.exists
+
+
+    - name: deply local facts template
+      template:
+        src: localfacts.j2
+        dest: /etc/ansible/facts.d/{{ansible_facts['fqdn']}}.fact
+        force: yes
+
+

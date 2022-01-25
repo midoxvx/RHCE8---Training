@@ -1,0 +1,17 @@
+---
+- name: Create archive
+  hosts: database
+  tasks:
+
+    - name: create a file called databae_list.txt
+      copy:
+        content: 'dev, test, qa, prod'
+        dest: /etc/database_list.txt
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+
+    - name: archive
+      archive:
+        path: /etc/database_list.txt
+        dest: /etc/database_list.gz
+        format: bz2

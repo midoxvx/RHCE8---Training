@@ -1,0 +1,12 @@
+---
+packages_to_install:
+  - httpd
+  - mod_ssl
+  - php
+
+tcp_ports:
+- "443/tcp"
+- "80/tcp"
+
+
+# vars file for apache

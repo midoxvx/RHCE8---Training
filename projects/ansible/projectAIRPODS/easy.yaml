@@ -1,0 +1,12 @@
+---
+- name: testing jinja conditionals
+  hosts: localhost
+  vars_files: 
+    - variables/all
+  tasks:
+    - name: template with if
+      template:
+         src: practice.j2
+         dest: /tmp/jinja.if
+
+      

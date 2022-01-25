@@ -1,0 +1,32 @@
+---
+- name: create directory and files
+  hosts: all
+  vars:
+    - directoryName: test_ansible
+    - directoryPerms: "0755"
+  tasks:
+    - name: Create the directory
+      file:
+        path: /tmp/ansibleplay
+        state: directory
+        owner: ansible
+        group: ansible
+        mode: "{{directoryPerms}}"
+      register: fileCommandOut
+
+    - name: Check stat of created directory
+      stat:
+        path: /tmp/ansibleplay
+      register: statOut
+
+    - name: Print mode
+      debug:
+        msg: "{{statOut['stat']['mode']}}"
+
+
+    - name: Run this only if the permissions missmatch
+      file:
+        path: /tmp/ansibleplay
+        state: touch
+        mode: 0755
+      when: statOut['stat']['mode'] not in directoryPerms

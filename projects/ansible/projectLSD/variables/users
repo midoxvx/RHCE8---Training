@@ -1,0 +1,7 @@
+users:
+ - name: mohie
+   shell: /bin/bash
+
+ - name: meltem
+   shell: /sbin/nologin
+

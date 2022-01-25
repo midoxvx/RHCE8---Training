@@ -1,0 +1,10 @@
+---
+- name: testing variables in group_vars
+  hosts: cloudservers
+  tasks:
+   - name: print variables out
+     debug:
+       msg: >
+         my name is {{dictionary['name']}}
+         i live in {{dictionary['address']}}
+         apt number {{apt}}  

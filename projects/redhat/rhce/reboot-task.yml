@@ -1,0 +1,10 @@
+- name: reboot machine
+  reboot:
+     msg: "REBOOTING"
+     test_command: "echo LOL"
+
+
+
+- name: show success
+  debug:
+    msg: happy reboot

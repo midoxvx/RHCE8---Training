@@ -1,0 +1,10 @@
+---
+ - name: Testing failed when
+   hosts: localhost
+   vars:
+    - name: true
+   tasks:
+     - name: echo something
+       shell: "echo false"
+       register: echo_result
+       changed_when: name

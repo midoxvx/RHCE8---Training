@@ -1,0 +1,49 @@
+---
+- name: Setup local repository
+  become: true
+  hosts: localhost
+  tasks:
+
+    - name: install packages (vsftpd)
+      yum:
+        name: 
+          - vsftpd
+          - createrepo
+
+        state: latest
+
+    - name: configure vsftpd to allow anonymous access
+      lineinfile:
+        line: "anonymous_enable=YES"
+        regexp: "^anonymous_enable=No"
+        state: present
+        path: /etc/vsftpd/vsftpd.conf
+
+    - name: download some packages in the directory
+      yum:
+        name: python3-setools
+        download_only: true
+        download_dir: /var/ftp/pub
+      changed_when: true
+      notify:
+        - 'firewall rules'
+        - 'systemd rules'
+        - 'create repo'
+
+  handlers:
+    - name: firewall rules
+      firewalld:
+        service: ftp
+        permanent: true
+        state: enabled
+        immediate: true
+        zone: public
+
+    - name: systemd rules
+      service:
+        name: vsftpd
+        state: started
+        enabled: true
+    - name: create repo
+      shell:
+        cmd: "createrepo /var/ftp/pub"

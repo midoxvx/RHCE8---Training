@@ -1,0 +1,14 @@
+---
+- name: distribute local facts
+  hosts: blacksheep
+  tasks:
+  - name: copy local facts
+    copy:
+     src: facts.fact
+     dest: /etc/ansible/facts.d/
+    register: resultcopy
+
+  - name: print fact name to be sure
+    debug:
+      msg: "UUID is : {{ ansible_facts['ansible_local']['facts']['UUID']['start'] }}"
+    when: "ansible_facts['ansible_local']['facts']['UUID']['start'] is defined"

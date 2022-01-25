@@ -1,0 +1,12 @@
+---
+- name: Deploy Local facts
+  hosts: blacksheep
+  tasks:
+   - name: copy localfact file
+     copy:
+       src: managed_facts.fact
+       dest: /etc/ansible/facts.d/
+   - name: Just display those facts
+     debug:
+       msg: "{{ ansible_facts['ansible_local']['managed_facts']['software']['package'] }}"
+          

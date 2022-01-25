@@ -1,0 +1,16 @@
+---
+- name: sshd port 2022
+  seport:
+    ports: 2022
+    proto: tcp
+    setype: ssh_port_t
+    state: present
+
+- name: template
+  template:
+    src: sshd.j2
+    dest: /etc/ssh/sshd_config
+    force: yes
+  notify: restart_sshd
+#firewall
+# tasks file for sshd

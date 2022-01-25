@@ -1,0 +1,26 @@
+---
+- name: generate server ip list
+  hosts: all
+  tasks:
+
+    - name: generate template
+      template:
+        src: server_list.j2
+        dest: /etc/server_list.txt
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+        setype: net_conf_t
+        mode: '0600'
+
+
+
+    - name: selinux
+      sefcontext:
+        setype: net_conf_t
+        state: present
+        target: /etc/server_list.txt
+    
+    - name: restorecon
+      shell:
+        cmd: "restorecon -Rv /etc"
+

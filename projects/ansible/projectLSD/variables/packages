@@ -1,0 +1,5 @@
+packages:
+ - httpd
+ - python3
+ - wget
+ - curl

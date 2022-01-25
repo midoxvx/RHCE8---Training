@@ -1,0 +1,8 @@
+---
+# handlers file for httpd
+
+- name: start service
+  service:
+     name: "{{serviceName}}"
+     state: started
+     enabled: true

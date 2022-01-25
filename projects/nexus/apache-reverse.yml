@@ -1,0 +1,25 @@
+---
+- name: remove apache
+  hosts: webservers
+  tasks:
+
+
+    - name: stop apache service
+      service:
+        name: httpd
+        state: stopped
+
+    - name: uninstall apache
+      yum:
+        name: httpd
+        state: absent
+    - name: remove directories
+      file:
+        state: absent
+        path: /etc/httpd
+    - name: remove webserver
+      ignore_errors: true
+      file:
+        state: absent
+        path: /webserver
+

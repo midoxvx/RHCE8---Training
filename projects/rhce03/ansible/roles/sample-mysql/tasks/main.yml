@@ -1,0 +1,64 @@
+---
+
+- name: install mysql-communit-server
+  yum:
+    name: mysql-community-server
+    state: present
+
+- name: create primary partition on sdb no 3
+  parted:
+    device: /dev/sdb
+    state: present
+    number: 3
+    flags:
+      - lvm
+    part_start: 2.1GiB
+    part_end: 3GiB
+
+- name: create vg vg_database2
+  lvg:
+    pvs: /dev/sdb3
+    vg: vg_database2
+
+- name: create lv_mysql
+  lvol:
+    lv: lv_mysql
+    vg: vg_database2
+    size: 700m
+    state: present
+
+- name: create filesystem
+  filesystem:
+    fstype: xfs
+    device: /dev/vg_database2/lv_mysql
+  
+- name: mount it on /mnt/rhce_backups
+  mount:
+    src: /dev/vg_database2/lv_mysql
+    path: /mnt/rhce3
+    fstype: xfs
+    state: mounted
+
+  notify:
+    - firewall_for_mysql
+    - systemd_for_mysql
+
+- name: deply configuration
+  template:
+    src: my.cnf.j2
+    dest: /etc/my.cnf
+    owner: "{{ansible_user}}"
+    group: "{{ansible_user}}"
+- name: firewall
+  firewalld:
+    port: 3306/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes
+#firewall
+#systemctl 
+#
+#
+#pre_tasks
+#
+# tasks file for sample-mysql

@@ -1,0 +1,63 @@
+---
+- name: setting up users locally
+  hosts: localhost
+  become: true
+  vars_files:
+     - variables/userslist
+     - variables/userpass
+  tasks:
+    - name: Create users with specific parameters and ssh keys for each
+      user:
+        name: "{{item.username}}"
+        uid: "{{item.uid}}"
+        shell: "{{item.shell}}"
+        password: "{{user_password | password_hash('sha512')}}"
+        generate_ssh_key: yes
+      loop: "{{users}}"
+      tags:
+        - controlhost
+    
+
+    - name: create directory for ssh keys for each user
+      file:
+        state: directory
+        path: /home/redhat/rhce/keys/{{item.username}}
+      loop: "{{users}}"
+      tags:
+        - localdir
+
+
+    - name: copy keys from home directories to new dirs
+      shell:
+       cmd: "cp /home/{{item.username}}/.ssh/id_rsa.pub /home/redhat/rhce/keys/{{item.username}}"
+      tags:
+        - copykeys
+      loop: "{{users}}"
+
+
+- name: setting up users remotely
+  hosts: all
+  become: true
+  vars_files:
+     - variables/userslist
+     - variables/userpass
+  tasks:
+    - name: Create users with specific parameters and ssh keys for each
+      user:
+        name: "{{item.username}}"
+        uid: "{{item.uid}}"
+        shell: "{{item.shell}}"
+        password: "{{user_password | password_hash('sha512')}}"
+      loop: "{{users}}"
+      tags:
+        - remotehosts
+
+    - name: setup ssh keys
+      authorized_key:
+        user: "{{item.username}}"
+        state: present
+        key: "{{lookup('file', '/home/redhat/rhce/keys/{{item.username}}/id_rsa.pub')}}"
+      loop: "{{users}}"
+      tags:
+        - remotehosts
+

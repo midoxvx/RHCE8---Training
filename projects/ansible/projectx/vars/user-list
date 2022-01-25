@@ -1,0 +1,8 @@
+users:
+  - username: mohie
+    homedirectory: /home/mohie
+    shell: /bin/bash
+
+  - username: meltem
+    homedirectory: /home/meltem
+    shell: /bin/mal

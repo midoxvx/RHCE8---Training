@@ -1,0 +1,15 @@
+---
+- name: hwoef
+  become: true
+  hosts: localhost
+  vars:
+    - mylist:
+        - one:
+        - two
+        - three
+
+  tasks:
+     - name: test
+       debug:
+         msg: "yes indeed"
+       when: "'three' in mylist"

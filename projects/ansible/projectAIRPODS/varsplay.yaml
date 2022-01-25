@@ -1,0 +1,13 @@
+---
+- name: testing vars 
+  hosts: all
+  tasks:
+    - name: print out first
+      debug:
+        msg: "{{Permit}}"
+
+
+    - name: Let's see templating
+      template:
+          src: vars.j2
+          dest: /tmp/vars.jinja

@@ -1,0 +1,10 @@
+---
+- name: lineinfile play
+  hosts: localhost
+  tasks:
+    - name: lineindfile test
+      lineinfile:
+         path: /tmp/httpd.conf
+         regex: '^DocumentRoot \"/.*e?\"'
+         line: 'DocumentRoot "/web"'
+

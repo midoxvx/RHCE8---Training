@@ -1,0 +1,17 @@
+---
+- name: cleanup
+  yum:
+    name: "{{apache_package}}"
+    state: absent
+
+- name: delete directory
+  file:
+    state: absent
+    path: /etc/httpd
+
+- name: delete web directory
+  file:
+    state: absent
+    path: /webserver
+
+

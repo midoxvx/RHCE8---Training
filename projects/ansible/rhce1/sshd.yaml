@@ -1,0 +1,32 @@
+---
+- name: sshd snap in config
+  hosts: all
+  become: true
+  vars:
+   - sshPath: /etc/ssh/ssh_config.d
+  tasks:
+    
+    - name: check if path exists
+      ignore_errors: true
+      shell:
+        cmd: "test -d {{sshPath}}"
+      register: shellCommand
+
+    - name: Create directory if not exists
+      file:
+        state: directory
+        path: /etc/ssh/ssh_config.d
+      when: shellCommand['rc'] != '0'
+
+    - name: Deploy template here
+      template:
+         src: sshd.j2
+         dest: "{{sshPath}}/mohie.config"
+      notify: restart sshd
+
+  handlers:
+    -  name: restart sshd
+       service:
+         name: sshd
+         state: restarted
+

@@ -1,0 +1,24 @@
+---
+- name: testing shell script
+  hosts: localhost
+  become: true
+  vars:
+   - dictionary:
+     Myname: mohie
+     age: 38
+     wifu: meltem
+
+  tasks: 
+
+    - name: shell module test
+      shell:  /home/redhat/rhce/shellscript.sh >> shellansible
+      args:
+        chdir: /tmp
+
+
+    - name: loop dict
+      debug:
+        msg: "{{item.key}}"
+      with_dict: "{{dictionary}}"
+      tags:
+        - starter

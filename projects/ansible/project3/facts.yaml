@@ -1,0 +1,10 @@
+---
+- name: Print specific facts
+  hosts: all
+  tasks:
+     - name: Print facts now
+       debug:
+          var: item
+       loop:
+           - "{{ ansible_facts['default_ipv4']['address'] }}"
+           - "{{ ansible_facts['distribution'] }}"

@@ -1,0 +1,11 @@
+---
+- name: create local facts and use them
+  hosts: database
+  tasks:
+
+
+    - name: download custom fact from cloud-web
+      get_url:
+        url: http://cloud-web-1/custom.fact
+        path: /etc/ansible/facts.d/
+        

@@ -1,0 +1,16 @@
+---
+- name: localaction
+  hosts: all
+  become: true
+  tasks:
+
+    - name: run on all hosts
+      ping:
+
+
+    - name:
+      shell:
+        cmd: "echo {{inventory_hostname}} >>/tmp/delegate.j2"
+      args:
+        executable: /bin/bash
+      delegate_to: managed-node-2

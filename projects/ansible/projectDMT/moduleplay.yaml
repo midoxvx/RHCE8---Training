@@ -1,0 +1,17 @@
+---
+- name: modules playbook
+  hosts: all
+  vars:
+    - att: 0755
+  tasks:
+    - name: stat some files
+      stat:
+        path: /etc/hosts
+      register: statOut
+    - name: Show current values
+      debug:
+        msg: "{{statOut['stat']}}"
+    - name: conditional
+      debug:
+        msg: "This is not the permission we need"
+      when: statOut['stat']['mode'] != att

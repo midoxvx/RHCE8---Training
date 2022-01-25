@@ -1,0 +1,66 @@
+---
+- name: Create primary parition
+  parted:
+    device: /dev/sdb
+    number: 1
+    flags: 
+      - lvm
+    state: present
+    part_start: 1MiB
+    part_end: 800MiB
+    
+- name: create vg called vg_database
+  lvg:
+    vg: vg_database
+    pvs: /dev/sdb1
+
+- name: create lvm called lv_mysql
+  lvol:
+    lv: lv_mysql
+    vg: vg_database
+    size: 512m
+
+- name: create xfs filesystem
+  filesystem:
+    fstype: xfs
+    dev: /dev/vg_database/lv_mysql
+- name: create /mnt/backups
+  file:
+    state: directory
+    path: /mnt/backups
+    owner: "{{ansible_user}}"
+    group: "{{ansible_user}}"
+
+- name: mount lv_mysql to /mnt/backups
+  mount:
+    path: /mnt/backups
+    src: /dev/vg_database/lv_mysql
+
+
+- name: firewall
+  firewalld:
+    port: 3306/tcp
+    state: enabled
+    permanent: true
+    immediate: true
+
+- name: template from configuration
+  template:
+    src: my.cnf.j2
+    dest: /etc/my.cnf
+    force: true
+
+- name: start service
+  service:
+    name: mysqld
+    state: started
+    enabled: true
+
+- name: My sql root user password should be set from variable database_password
+  mysql_user:
+    name: root
+    password: "{{database_password}}"
+    priv: '*.*:ALL'
+    state: present
+    host_all: true
+# tasks file for sample-mysql

@@ -1,0 +1,17 @@
+---
+- name: motd setter
+  hosts: all
+  vars:
+    - proxy_server: "proxy"
+    - web_server: "web"
+    - database_server: "database"
+  tasks:
+
+
+    - name: create motd
+      template:
+        src: motd.j2
+        dest: /etc/motd
+        force: true
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"

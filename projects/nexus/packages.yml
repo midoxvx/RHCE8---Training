@@ -1,0 +1,20 @@
+---
+- name: software install
+  hosts: proxy,database
+  tasks:
+    - name: proxy packages
+      yum:
+        name:
+          - tcpdump
+          - mailx
+        state: present
+      when: "'proxy' in group_names"
+
+
+    - name: database packages
+      yum:
+        name:
+          - lsof
+          - mailx
+        state: present
+      when: "'database' in group_names"

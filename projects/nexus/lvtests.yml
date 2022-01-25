@@ -1,0 +1,16 @@
+---
+- name: conditionals for volumes
+  hosts: managed-node-1
+  tasks:
+
+    - name: Let's check if a certain vg exists
+      debug:
+        msg: "we found what you are looking for"
+      when: "'lv_rhce' in ansible_facts['lvm']['lvs']"
+
+
+        
+    - name: Let's try different test
+      debug:
+        msg: "We found it from another way"
+      when: "ansible_facts['lvm']['lvs']['lv_rhce']['size_g'] | int <= 1"

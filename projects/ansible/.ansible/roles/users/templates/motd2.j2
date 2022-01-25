@@ -1,0 +1,4 @@
+{%extends "motd.j2" %}
+{% block welcome %}
+{{ansible_facts['fqdn']}}
+{%endblock%}

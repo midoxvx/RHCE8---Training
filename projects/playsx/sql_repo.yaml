@@ -1,0 +1,33 @@
+---
+- name: create repository for managed-node-2
+  hosts: localhost
+  become: true
+  tasks:
+
+    - name: create directory
+      file:
+        state: directory
+        path: /mnt/sqlrepo
+       
+    - name: download Pyfiles
+      yum:
+        name:
+          - python2-PyMySQL
+          - python3-PyMySQL
+        download_only: yes
+        download_dir: /mnt/sqlrepo
+        state: present
+
+
+
+
+- name: create remote repo
+  hosts: proxy
+  become: true
+  tasks:
+    - name: create remote repo
+      copy:
+        src: /mnt/sqlrepo
+        dest: /tmp/
+      
+

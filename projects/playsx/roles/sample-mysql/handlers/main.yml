@@ -1,0 +1,18 @@
+---
+# handlers file for sample-mysql
+#
+#
+- name: sqlservice
+  service:
+    name: mysqld
+    state: started
+    enabled: true
+
+
+
+- name: sqlfirewall
+  firewalld:
+    port: "3306/tcp"
+    state: enabled
+    permanent: true
+    immediate: true

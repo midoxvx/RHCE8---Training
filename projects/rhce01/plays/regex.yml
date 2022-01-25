@@ -1,0 +1,15 @@
+---
+- name: play to copy files
+  hosts: localhost
+  become: true
+  vars:
+    - directory: /tmp/filesx
+  tasks: 
+
+    - name: print specific filenames
+      debug:
+        msg: "{{fileName}}"
+      loop: "{{lookup('lines', 'ls -1 {{directory}}', wantlist=true)}}"
+      loop_control:
+        loop_var: fileName
+      when: fileName is regex('.*b$')

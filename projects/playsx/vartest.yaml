@@ -1,0 +1,17 @@
+---
+- name: my tests
+  hosts: all
+  vars:
+      name: mohie
+      age: 30
+      weight:
+        - '20'
+        - '30'
+   
+
+  tasks:
+    - name: print
+      debug:
+        msg: 
+          - "{{name}}"
+          - "{{weight[0]}}"

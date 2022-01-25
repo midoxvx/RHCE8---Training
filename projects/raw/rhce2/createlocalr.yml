@@ -1,0 +1,77 @@
+---
+ - name: create local repository and files
+   hosts: localhost
+   become: true
+   vars:
+     - ftpPath: /ftpd
+   tasks:
+     - name: Block for yum
+       block:
+          - name: Install YUM Utils and create repo packages
+            yum:
+              name:
+                - yum-utils
+                - createrepo
+                - vsftpd
+              state: latest
+          - name: Create directory to be ftp repo
+            file:
+              state: directory
+              path: "{{ftpPath}}"
+
+     - name: Configure vsftpd anonymous login
+       lineinfile:
+          regexp: '^anonymous_enable=NO'
+          line: 'anonymous_enable=YES'
+          path: /etc/vsftpd/vsftpd.conf
+          state: present
+
+     - name: Configure vsftpd anonymous root to {{ftpPath}}
+       lineinfile:
+         line: 'anon_root={{ftpPath}}'
+         path: /etc/vsftpd/vsftpd.conf
+         state: present
+
+
+     - name: get selinux context for {{ftpPath}}
+       shell:
+         cmd: 'ls -aZ /var/ftp/pub | cut -f1 | tail -n 1 | cut -d ":" -f3'
+       register: fileContextType
+       notify:
+         - setcontext
+         - restorecon
+         - booleans
+         - service start
+
+     - name: download repository files
+       yum:
+         download_only: yes
+         download_dir: "{{ftpPath}}"
+         name: nmap
+
+     - name: Create Repo on everything
+       shell:
+         cmd: "createrepo -v {{ftpPath}}"
+     
+
+   handlers: 
+
+     - name: setcontext
+       sefcontext:
+           target: '/ftpd(/.*)?'
+           setype: "{{fileContextType['stdout']}}"
+
+     - name: booleans
+       seboolean:
+         name: ftpd_use_passive_mode
+         state: yes
+         persistent: yes
+
+     - name: service start
+       service:
+           name: vsftpd
+           state: started
+           enabled: true
+     - name: restorecon
+       shell:
+         cmd: "restorecon -Rv {{ftpPath}}"

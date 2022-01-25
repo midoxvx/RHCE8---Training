@@ -1,0 +1,15 @@
+---
+- name: install mysql
+  hosts: database
+  become: true
+  vars_files:
+    - vars/secret.yaml
+
+  pre_tasks:
+    - name: install dependencies
+      yum:
+        name:
+          - python2-PyMySQL 
+          - python3-PyMySQL
+  roles:
+    - sample-mysql

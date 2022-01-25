@@ -1,0 +1,13 @@
+all:
+  hosts:
+    managed-node-1:
+    managed-node-2:
+    managed-node-3:
+  children:
+    cloudservers:
+      hosts:
+        managed-node-1:
+        managed-node-2:
+    blacksheep:
+      hosts:
+        managed-node-3:

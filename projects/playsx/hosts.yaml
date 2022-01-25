@@ -1,0 +1,15 @@
+---
+- name: set hostnames
+  hosts: all
+  gather_facts: true
+  tasks:
+
+    - name: jinja
+      become: true
+      template:
+        src: hosts.j2
+        dest: /etc/hosts
+        force: yes
+      when: "'storage' in group_names"
+
+

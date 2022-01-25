@@ -1,0 +1,6 @@
+---
+- name: setup httpd via role
+  hosts: localhost
+  become: true
+  roles:
+    - httpd

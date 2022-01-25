@@ -1,0 +1,23 @@
+---
+- name: Propagate hosts file
+  hosts: all
+  tasks: 
+    - name: copy hosts file
+      copy:
+        src: /etc/hosts
+        dest: /etc/hosts
+
+      notify: ping_handler
+
+
+
+  handlers:
+  - name: ping_handler 
+    shell:
+      cmd: "ping -c 2 control-node >/tmp/ansible-ping"
+    register: returncode
+    
+  - name: testing when statements
+    debug:
+      msg: "All is good in the hood"
+    when: returncode['rc'] != "0"

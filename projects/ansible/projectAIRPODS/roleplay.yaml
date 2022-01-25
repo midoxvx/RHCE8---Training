@@ -1,0 +1,6 @@
+---
+- name: testing roles
+  hosts: all
+  roles:
+    - role: users
+

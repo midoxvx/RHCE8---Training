@@ -1,0 +1,9 @@
+---
+- name: apache role, just test
+  hosts: webservers
+  tasks:
+
+
+    - name: include_role
+      include_role:
+        name: apache

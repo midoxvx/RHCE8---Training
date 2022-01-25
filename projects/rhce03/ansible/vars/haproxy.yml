@@ -1,0 +1,10 @@
+haproxy_backend_servers:
+ - name: cloud-node-1
+   address: 35.175.142.53:80
+ - name: cloud-node-2
+   address: 44.201.230.203:80
+
+haproxy_backend_mode: 'http'
+haproxy_backend_balance_method: 'roundrobin'
+
+

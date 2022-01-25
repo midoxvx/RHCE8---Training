@@ -1,0 +1,17 @@
+---
+- name: find some files
+  hosts: localhost
+  become: true
+  tasks:
+
+    - name: find some files
+      find:
+        path: /tmp
+        pattern: 'files*'
+        recurse: yes
+      register: findOut
+
+    - name: echochamber
+      debug:
+        msg: "{{findOut}}"
+    

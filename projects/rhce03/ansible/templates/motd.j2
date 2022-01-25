@@ -1,0 +1,7 @@
+{%if 'webservers' in group_names%}
+{{web_server}}
+{%elif 'database' in group_names%}
+{{database_server}}
+{%elif 'proxy' in group_names%}
+{{proxy_server}}
+{%endif%}

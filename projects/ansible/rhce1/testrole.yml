@@ -1,0 +1,12 @@
+---
+- name: running httpd role
+  hosts: localhost
+  become: true
+  pre_tasks:
+    - name: remove httpd if installed
+      yum:
+        name: httpd
+        state: absent
+
+  roles:
+    - httpd

@@ -1,0 +1,56 @@
+---
+- name: make sure apache isn't installed
+  package_facts:
+    manager: auto
+
+- name: Block to install apache
+  block:
+    - name: install apache package
+      yum:
+        name: "{{apache_package}}"
+        state: present
+    - name: start service
+      service:
+        name: "{{apache_service}}"
+        state: started
+        enabled: true
+    
+    - name: use vhost.j2 template
+      template:
+        src: vhost.j2
+        dest: /etc/httpd/conf.d/vhost.conf
+
+    - name: create webserver directory
+      file:
+        state: directory
+        path: /webserver
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+
+    - name: modify main configuration file-1
+      replace:
+        replace: '\1AllowOverride All'
+        regexp: '^(\s+)?AllowOverride None'
+        path: /etc/httpd/conf/httpd.conf
+    - name: modify main configuration file-1
+      replace:
+        regexp: '^(\s+)?Require all .*'
+        replace: '\1Require all granted'
+        path: /etc/httpd/conf/httpd.conf
+
+  when: "ansible_facts['packages'][apache_package] is not defined"
+
+  always:
+    - name: Confirm installation
+      debug:
+        msg: "{{apache_package}} is installed"
+      notify:
+        - set_bool
+        - set_context
+        - restart_apache
+      changed_when: true
+
+
+        
+      
+# tasks file for apache

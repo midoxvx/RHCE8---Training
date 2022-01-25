@@ -1,0 +1,8 @@
+---
+- name: apache_selinux
+  sefcontext:
+    setype: httpd_config_t
+    target: '/webserver(.*/)?'
+    state: present
+
+# handlers file for apache

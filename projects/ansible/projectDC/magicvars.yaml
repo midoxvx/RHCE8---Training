@@ -1,0 +1,6 @@
+---
+- name: magic variables
+  hosts: all
+  tasks: 
+  - debug:
+      var: hostvars['managed-node-1']['ansible_facts']

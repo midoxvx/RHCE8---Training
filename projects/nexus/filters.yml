@@ -1,0 +1,14 @@
+---
+- name: testing filters
+  hosts: managed-node-1
+  tasks:
+
+
+    - name: block test
+      block:
+        - name: package facts
+          service_facts:
+        
+        - name: print out
+          debug:
+            msg: "{{ansible_facts['services'] | map(attribute='name') | list}}"

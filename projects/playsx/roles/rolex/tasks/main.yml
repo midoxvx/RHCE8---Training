@@ -1,0 +1,26 @@
+---
+- name: This is roles x
+  vars:
+    devices:
+      - name: 'eth0'
+        type: 'ethernet'
+        ip_address: '10.10.0.1/24'
+      - name: 'eth8'
+        type: 'ethernet'
+        ip_address: '10.10.0.2/24'
+  debug:
+    msg: "{{devices | selectattr('name', 'equalto', 'eth8')| list}}"
+
+
+
+- name: this is rolex
+  debug:
+    msg: "{{item.name}}"
+  loop: "{{devices}}"
+  when: devices is defined
+
+
+- name: this is rolex
+  debug:
+    msg: "{{playbookvar}}"
+# tasks file for rolex

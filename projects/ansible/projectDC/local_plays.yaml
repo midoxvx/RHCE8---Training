@@ -1,0 +1,9 @@
+---
+- name: testing conditionals
+  hosts: localhost
+  vars_files: variables/localhostvar
+  tasks:
+    - name: print name
+      debug:
+        msg: "My name is {{ name }}"
+      when: '"mohie" in name'

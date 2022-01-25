@@ -1,0 +1,13 @@
+---
+- name: let's find somefiles
+  hosts: managed-node-1
+  tasks:
+    - name: find some directories
+      find:
+        path: /tmp
+        file_type: directory
+      register: findOut
+    - name: looping
+      debug:
+        msg: "{{item.path}}"
+      loop: "{{findOut['files']}}"

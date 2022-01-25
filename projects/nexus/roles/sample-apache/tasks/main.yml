@@ -1,0 +1,28 @@
+---
+
+- name: Install apache packages
+  yum:
+    name:
+      - httpd
+      - mod_ssl
+      - php
+    state: present
+
+- name: firewall configuration
+  firewalld:
+    service: "{{item}}"
+    state: enabled
+    permanent: true
+    immediate: true
+  loop:
+    - http
+    - https
+
+- name: template deployment
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    force: true
+  notify:
+    - restat_apache
+# tasks file for sample-apache

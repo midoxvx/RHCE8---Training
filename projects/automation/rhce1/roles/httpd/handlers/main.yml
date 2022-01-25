@@ -1,0 +1,16 @@
+---
+# handlers file for httpd
+
+- name: secontrols
+  sefcontext: 
+    target: "/web2(/.*)?"
+    state: present
+    setype: "httpd_config_t"
+
+
+- name: seportset
+  seport:
+    ports: 82,83
+    proto: tcp
+    setype: "http_port_t"
+    state: present

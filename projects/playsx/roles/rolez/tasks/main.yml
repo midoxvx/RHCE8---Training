@@ -1,0 +1,7 @@
+---
+
+
+- name: rolez
+  debug:
+    msg: "I am just here cuz i am a dependency"
+# tasks file for rolez

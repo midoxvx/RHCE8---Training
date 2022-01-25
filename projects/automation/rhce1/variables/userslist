@@ -1,0 +1,13 @@
+users:
+  - username: userweb1
+    uid: 1288
+    shell: /bin/bash
+  - username: userweb2
+    uid: 1290
+    shell: /bin/bash
+  - username: usersql1
+    uid: 2299
+    shell: /bin/bash
+  - username: usersql2
+    uid: 2298
+    shell: /bin/bash

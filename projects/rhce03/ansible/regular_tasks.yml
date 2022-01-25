@@ -1,0 +1,11 @@
+---
+- name: create a cron job
+  hosts: proxy
+  tasks:
+
+    - name: create cron job
+      cron:
+        name: dump date command
+        user: root
+        hour: '*/1'
+        job: 'echo $(date) >> /var/log/time.ansible.log'

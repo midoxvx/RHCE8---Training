@@ -1,0 +1,6 @@
+- name: Create users
+  user: 
+    name: "{{userName}}"
+    uid:  "{{uID}}"
+    shell: "{{userShell}}"
+

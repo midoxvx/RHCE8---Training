@@ -1,0 +1,10 @@
+---
+- name: motd
+  hosts: all
+  become: true
+  tasks:
+    - name: test first
+      copy: 
+        content: "{{motdWelcome}}"
+        dest: /etc/motd
+        force: true

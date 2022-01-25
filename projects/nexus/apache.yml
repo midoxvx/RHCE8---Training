@@ -1,0 +1,52 @@
+---
+- name: setup apache webserver
+  hosts: webservers
+  tasks:
+
+    - name: setup apache package
+      yum: 
+        name:
+          - httpd
+          - php
+          - mod_ssl
+
+
+    - name: create webserver directory
+      file:
+        state: directory
+        path: /webserver
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+
+
+    - name: link webserver directory to /var/www/html/webserver
+      file:
+        state: link
+        src: /webserver
+        dest: /var/www/html/webserver
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+    
+    - name: populate index.html
+      copy:
+        content: "This server IP address is {{ansible_facts['default_ipv4']['address']}}"
+        dest: /var/www/html/index.html
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+      notify:
+        - apache_selinux
+        - apache_service
+
+
+  handlers:
+    - name: apache_selinux
+      sefcontext:
+        setype: httpd_config_t
+        target: '/webserver(.*/)?'
+        state: present
+
+    - name: apache_service
+      service:
+        name: httpd
+        state: started
+        enabled: true

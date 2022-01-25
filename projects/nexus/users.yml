@@ -1,0 +1,57 @@
+---
+- name: create users on some servers
+  hosts: all
+  vars_files:
+    - vars/user_list.yml
+    - secret.yml
+  tasks:
+
+
+    - name: create users on webservers
+      user:
+        name: "{{webuser.username}}"
+        shell: "{{shell}}"
+        password: "{{user_password | password_hash('sha512', 'rhce')}}"
+        update_password: on_create
+        groups: wheel
+        append: true
+      loop: "{{users}}"
+      loop_control:
+        loop_var: webuser
+      when: (webuser.uid is regex('^1') and 'webservers' in group_names)
+
+    - name: ssh_key
+      authorized_key:
+        user: "{{keyuser.username}}"
+        state: present
+        key: "{{lookup('file', '/home/nexus/.ssh/id_rsa.pub')}}"
+      loop: "{{users}}"
+      loop_control:
+        loop_var: keyuser
+      when: (keyuser.uid is regex('^1') and 'webservers' in group_names)
+
+
+
+    - name: create users on database servers
+      user:
+        name: "{{database.username}}"
+        shell: "{{shell}}"
+        password: "{{user_password | password_hash('sha512', 'rhce')}}"
+        update_password: on_create
+        groups: wheel
+        append: true
+      loop: "{{users}}"
+      loop_control:
+        loop_var: database
+      when: (database.uid is regex('^2') and 'database' in group_names)
+
+    - name: ssh_key
+      authorized_key:
+        user: "{{keyuser2.username}}"
+        state: present
+        key: "{{lookup('file', '/home/nexus/.ssh/id_rsa.pub')}}"
+      loop: "{{users}}"
+      loop_control:
+        loop_var: keyuser2
+      when: (keyuser2.uid is regex('^2') and 'database' in group_names)
+

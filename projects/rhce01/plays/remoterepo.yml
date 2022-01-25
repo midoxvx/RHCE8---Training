@@ -1,0 +1,12 @@
+---
+- name: remote repo
+  hosts: localservers
+  become: true
+  tasks:
+
+    - name: setup repository
+      yum_repository:
+        name: RHCE
+        description: RHCE-EXAM
+        baseurl: ftp://10.0.1.1/var/ftp/pub/
+        enabled: true

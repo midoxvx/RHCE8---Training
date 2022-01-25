@@ -1,0 +1,24 @@
+---
+- name: del users
+  hosts: all
+  become: true
+  gather_facts: no
+  vars:
+   - users:
+     - alice
+     - vincent
+     - sandy
+     - patrick
+     - solidus
+     - joseph
+     - solidsnake
+     - liquidsnake
+     - usersql2
+     - userweb1
+     - userweb2
+  tasks:
+    - name: delete all
+      user:
+        name: "{{item}}"
+        state: absent
+      loop: "{{users}}"

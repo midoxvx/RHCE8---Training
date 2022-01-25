@@ -1,0 +1,9 @@
+---
+- name: including tasks
+  hosts: localhost
+  tasks:
+     - debug:
+         msg: "I am from the main playbook"
+     - include_tasks: includeme.yaml
+       vars:
+         - myName: Mohie

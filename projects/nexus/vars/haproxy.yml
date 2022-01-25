@@ -1,0 +1,8 @@
+
+haproxy_backend_servers:
+- name: cloud-web-1
+  address: 184.73.14.18:80
+- name: cloud-web-2
+  address: 3.82.24.160:80
+
+

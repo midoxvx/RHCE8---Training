@@ -1,0 +1,11 @@
+---
+- name: testing roles and stuff
+  hosts: localhost
+  vars:
+    - varscope: "SCOPE"
+    - playbookvar: "SCOPE"
+  tasks:
+
+    - name: rolex
+      include_role:
+        name: rolex

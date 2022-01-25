@@ -1,0 +1,72 @@
+---
+- name: Install & Configure Apache
+  hosts: localhost
+  tasks:
+    - name: Installation & Configuration block
+      block:
+        - name: Install Apache packages
+          yum:
+            name: httpd
+            state: latest
+
+        - name: Create the /web directory
+          file:
+            state: directory
+            path: /web
+
+        - name: Create the /web/virtualhost directory
+          file:
+            state: directory
+            path: /web/virtualhost
+
+        - name: Use template to configure the virtual host /etc/httpd/conf.d/vhost.conf
+          template:
+             src: virtualhost.j2
+             dest: /etc/httpd/conf.d/vhost.conf
+
+        - name: Change Document root on main server configuration
+          lineinfile:
+             regex: "^DocumentRoot .*\"$"
+             line: "DocumentRoot   /web"
+             path: /etc/httpd/conf/httpd.conf
+
+        - name: Configure the main server to say hello main server
+          lineinfile:
+            line: "hello from main server"
+            path: /web/index.html
+            create: true
+
+        - name: Configure the virtual host to say "hello virtual host and use machine linux distro name"
+          template:
+            src: vhost.j2
+            dest: /web/virtualhost/index.html
+
+        - name: Configure selinux file context on the document root directory
+          sefcontext:
+            setype: httpd_config_t
+            target: "/web(/.*)?"
+
+        - name: Configure selinux to allow port 82 with http_t
+          seport:
+            ports: 8888
+            proto: tcp
+            setype: http_port_t
+
+        - name: Run restorecon command
+          shell:
+            cmd: "restorecon -Rv /web"
+        - name: start httpd service
+          service:
+            name: httpd
+            state: started
+            enabled: true
+
+      rescue:
+
+        - name: remove http packages
+          yum:
+            name: httpd
+            state: absent
+
+
+

@@ -1,0 +1,23 @@
+---
+- name: create users
+  hosts: all
+  vars_files:
+      - vars/packages
+      - vars/users
+  tasks:
+   - name: Install Packages
+     yum:
+       name: "{{ basicPackages }}"
+       state: latest
+     loop: "{{ basicPackages }}"
+   - name: add groups
+     group:
+       name: "{{item.group}}"
+     loop: "{{ users }}"
+   - name: add users
+     user:
+        name: "{{item.name}}"
+        shell: "{{item.shell}}"
+        append: yes
+        groups: "{{item.group}}"
+     loop: "{{users}}"

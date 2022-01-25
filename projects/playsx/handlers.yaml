@@ -1,0 +1,27 @@
+---
+- name: testing handlers order
+  hosts: localhost
+  become: true
+  tasks:
+
+
+    - name: task1
+      debug:
+        msg: "i am task one"
+
+    - name: task2
+      debug:
+        msg: "I am triggering a handler"
+      notify: ghost
+      changed_when: true
+
+    - name: task3
+      debug:
+        msg: "i should run after the handler!"
+
+
+
+  handlers:
+    - name: ghost
+      debug:
+        msg: "ghost here"

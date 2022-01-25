@@ -1,0 +1,84 @@
+---
+- name: disk checker
+  hosts: managed-node-2
+  become: true
+  vars:
+    - var1: '600'
+    - var2: '1200'
+  tasks:
+
+    - name: first check if a parition exists
+      stat:
+        path: /dev/sdb2
+      register: statOut
+
+
+    - name: debug
+      debug:
+        msg: |
+          "{%if statOut['stat']['exists']%}{{var1}}
+            {%elif not statOut['stat']['exists']%}
+            {{var2}}
+            {%endif%}"
+      tags:
+        - skip
+
+    - name: check disk size
+      parted:
+        device: /dev/sdb
+        unit: MiB
+      register: partedOut
+      tags:
+        - always
+
+
+    - name: check size conditional
+      debug:
+        msg: "size is over the needed limit"
+      when: partedOut.disk.size > 4000 and partedOut.disk.size < 8000
+      tags:
+        - always
+    
+    - block:  
+        - name: Create partition when some conditions are met (gather facts)
+          stat:
+            path: /dev/sdb2
+          register: statOut2
+
+        - name: set facts
+          set_fact:
+            partitionNumber: '2'
+          when: not statOut2.stat.exists
+
+        - name: create partition
+          parted:
+            device: /dev/sdb
+            number: "{{partitionNumber| default('2')}}"
+            state: present
+            part_start: 1GiB
+            part_end: 2GiB
+        - name: create VG
+          lvg:
+            vg: vgaplus
+            pvs: "/dev/sdb{{partitionNumber|default('2')}}"
+            state: present
+        - name: create lvm
+          lvol:
+            vg: vgaplus
+            lv: lvaplus
+            size: 500m
+        - name: create file system
+          filesystem:
+            fstype: xfs
+            dev: /dev/vgaplus/lvaplus
+        - name: mount
+          mount:
+            path: /aplus
+            src: /dev/vgaplus/lvaplus
+            state: mounted
+            fstype: xfs
+
+      when:
+       - partedOut.disk.size > 4000
+       - partedOut.disk.size < 8000
+     

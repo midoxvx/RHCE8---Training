@@ -1,0 +1,14 @@
+---
+- name: firewall_for_mysql
+  firewalld:
+    port: 3306/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes
+
+- name: systemd_for_mysql
+  service:
+    name: mysqld
+    state: started
+    enabled: yes
+# handlers file for sample-mysql

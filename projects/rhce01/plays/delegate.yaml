@@ -1,0 +1,18 @@
+---
+- name: delegate test
+  hosts: all
+  become: true
+  tasks:
+  
+
+    - name: this will be executed on all hosts
+      debug:
+        msg: "All"
+
+
+
+
+    - name: this will be executed on localhost
+      shell:
+        cmd: "echo muff >>/tmp/delegate"
+      delegate_to: 127.0.0.1

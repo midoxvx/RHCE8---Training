@@ -1,0 +1,12 @@
+---
+- name: Just playing around as i should
+  hosts: localhost
+  vars:
+    - attributes:
+          name: mohie
+          age: 28
+    - testCon: "{{attributes.name if (attributes.age == 38) else (attributes.name|upper)}}"
+  tasks:
+    - name: lets debug
+      debug:
+        msg: "{{testCon}}"

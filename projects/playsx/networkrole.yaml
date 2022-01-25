@@ -1,0 +1,20 @@
+---
+- name: network role
+  hosts: managed-node-1
+  become: true
+  vars:
+    network_connections:
+      - name: enp0s9
+        state: up
+        type: ethernet
+        autoconnect: yes
+        interface_name: enp0s9
+        ip:
+          address:
+            - "192.0.6.46/18"
+
+  tasks:
+    - name: roles
+      include_role: 
+          name: rhel-system-roles.network
+      when: "'enp0s19' in ansible_facts['interfaces']"

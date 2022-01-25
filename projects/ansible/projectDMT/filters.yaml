@@ -1,0 +1,31 @@
+---
+- name: playing with filters
+  hosts: localhost
+  vars:
+    - attributes:
+         shell: /bin/bash
+         password: 123456
+         motd: "Welcome to hell"
+    - myName: mohie
+    - age: 38
+  tasks:
+     - name: playing out with some filters
+       debug:
+         msg: "You will see this variable just fine, your name is {{myName}} and your age is {{age}}"
+
+     - name: playing with default pluging
+       debug:
+         msg: "this variable is not set, Your hobbies are {{hobbies | default('video games')}}"
+
+     - name: dictionary time now
+       debug:
+         msg: "you shell is {{attributes['shell']}} and your password is {{attributes['password']}} also {{attributes['motd']}}"
+
+     - name: lets use the omit filter
+       debug:
+         msg: "we are looping through 3 shells and one extra mode. Shell is {{item['shell']}} and mode is {{item['mode'] | default(omit)}}"
+       loop:
+         - shell: /bin/bash
+         - shell: /bin/sh
+         - shell: /bin/czh
+           mode: 666    

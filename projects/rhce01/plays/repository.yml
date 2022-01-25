@@ -1,0 +1,43 @@
+---
+- name: repository server
+  hosts: localhost
+  become: true
+  tasks:
+
+    - name: download vsftpd
+      yum:
+        name: 
+          - vsftpd
+          - createrepo
+        state: latest
+
+    - name: configure vsftpd to allow anon access
+      lineinfile:
+        regexp: '^anonymous_enable=NO'
+        line: "anonymous_enable=YES"
+        state: present
+        path: /etc/vsftpd/vsftpd.conf
+
+    - name: download a couple of file
+      yum:
+        name:
+          - nmap-ncat
+        state: latest
+        download_only: yes
+        download_dir: /var/ftp/pub
+
+    - name: create repo on /var/ftp/pub
+      shell:
+        cmd: "createrepo /var/ftp/pub"
+
+    - name: firewall allow ftp ports
+      firewalld:
+        service: ftp
+        state: enabled
+        permanent: yes
+        immediate: yes
+    - name: enable service
+      service:
+        name: vsftpd
+        state: started
+        enabled: true

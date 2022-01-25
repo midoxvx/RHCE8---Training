@@ -1,0 +1,37 @@
+---
+- name: conditionals
+  hosts: localhost
+  become: true
+  vars:
+    - size: '30'
+    - sizeint: 20
+    - reply1: yess
+    - reply2: yas
+  tasks:
+    - name: jinja
+      debug:
+        msg: "{%if size | int <=31%}{{reply1}}{%elif size | int >= 35%}{{reply2}}{%endif%}"
+
+    - name: jinja2
+      debug:
+        msg: "{{(sizeint <= 20)}}"
+      when: 'size | int == 20'
+
+    - name: jinja3
+      vars:
+        - dateOut: "{{lookup('pipe', 'date')}}"
+      debug:
+        msg: "{{dateOut}}"
+
+    - name: jinja4
+      assert:
+        that:
+          - size | int == 30
+          - sizeint == 90
+        success_msg: "yes you did it"
+        fail_msg: "woopsie"
+
+
+    - name: jinja5
+      debug:
+        msg: "you should see me"

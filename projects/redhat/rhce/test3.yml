@@ -1,0 +1,56 @@
+---
+- name: testing stuff
+  hosts: localhost
+  become: true
+  vars:
+    - var1: woopsie
+    - packages:
+       - name: "yum"
+         version: 4.7.0
+       - name: "ansible"
+         version: 2.9.27
+       - name: "yum-utils"
+         version: 4.0.21
+  tasks:
+
+    - name: Refresh package facts
+      package_facts:
+          manager: auto
+      tags:
+        - always
+
+
+
+    - name: print facts
+      debug:
+        msg: >
+           "{%if ansible_facts['packages']['ansible'][0]['version'] is version('2.9.27', '<=')%}
+             {{var1}}{%else%}not the right choice homie{%endif%}"
+      tags:
+        - syn1
+
+    - name: print facts
+      debug:
+        var: ansible_facts['packages']['ansible'][0]['version']
+      tags:
+        - tester
+
+
+    - name: loop scoop
+      debug: 
+        msg: >
+          "{%if ansible_facts['packages'][item.name][0]['version'] is version(item.version, '<=')%}
+            {{var1}}{%else%}oopsie{%endif%}"
+      loop: "{{packages}}"
+      tags:
+        - always
+
+
+    - name: scoop loop
+      debug:
+        msg: >
+            "{{ true if (ansible_facts['packages'][item.name][0]['version'] is regex('^[0-9]')) 
+                else (false)}}"
+      loop: "{{packages}}"
+      tags:
+        - always

@@ -1,0 +1,8 @@
+---
+- name: printing variables
+  vars_files: vars/users
+  hosts: localhost
+  tasks:
+  - name: Print out list
+    debug: 
+      var: users[0]

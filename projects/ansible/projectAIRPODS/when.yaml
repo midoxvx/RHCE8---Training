@@ -1,0 +1,14 @@
+---
+- name: testing when
+  hosts: localhost
+  vars:
+    versionNumber: www.hohoho.com
+
+  tasks:
+    - name: Debug some stuff
+      debug:
+        msg: Your version checks out
+      when: versionNumber is regex('^www\..*\.')
+
+
+

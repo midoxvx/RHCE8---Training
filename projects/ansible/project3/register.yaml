@@ -1,0 +1,12 @@
+---
+- name: Testing variable registering
+  hosts: all
+  tasks:
+   - shell: "/usr/bin/ping -c 2 localhost"
+     register: w00t
+   - debug:
+       msg: >
+          "The return code is: {{w00t.rc}}"
+          "The command ran is: {{w00t.cmd}}"
+          "Stdout: {{w00t.stdout_lines}}"
+           

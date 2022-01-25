@@ -1,0 +1,8 @@
+---
+- name: print facts
+  hosts: localhost
+  tasks:
+  - name: print
+    debug:
+      var: ansible_facts['default_ipv4']['address']
+

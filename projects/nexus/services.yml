@@ -1,0 +1,10 @@
+---
+- name: service set
+  hosts: all
+  tasks:
+
+
+    - name: systemctl 
+      shell:
+        cmd: "systemctl set-default multi-user.target"
+      changed_when: false

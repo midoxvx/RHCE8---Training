@@ -1,0 +1,7 @@
+---
+- name: start apache service
+  service:
+    name: "{{apache_package}}"
+    state: started
+    enabled: true
+  notify: apache_selinux

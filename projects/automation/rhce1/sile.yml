@@ -1,0 +1,11 @@
+---
+- name: Site player
+  become: true
+  hosts: localhost
+  tasks:
+    - name: site playbook execution
+      debug:
+        msg: "we are about to include a playbook"
+
+- name: Import now
+  import_playbook: playbook.yml

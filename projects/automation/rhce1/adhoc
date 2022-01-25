@@ -1,0 +1,9 @@
+#!/bin/bash
+
+
+sudo ansible all -u root -m user -a "user=automation state=present"
+sudo ansible all -u root -m authorized_key -a "user=automation state=present key=\"{{lookup(\'file\', \'/home/automation/.ssh/id_rsa.pub\')}}\""
+sudo ansible all -u root -m shell -a "echo 'automation        ALL=(ALL)       NOPASSWD: ALL' > /etc/sudoers.d/automation"
+
+
+exit

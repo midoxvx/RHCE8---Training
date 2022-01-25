@@ -1,0 +1,10 @@
+---
+- name: Test Playbook
+  hosts: all
+  vars_files:
+  - variables/basic_packages
+  tasks:
+  - name: Print loop
+    debug:
+      msg: "Testing {{basicPackages}}"
+    loop: "{{basicPackages}}"

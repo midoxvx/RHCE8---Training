@@ -1,0 +1,8 @@
+---
+# vars file for httpd
+
+webRoot: /web2
+webIndex: "{{webRoot/index.html}}"
+webPort: 82
+webPackage: httpd
+webService: httpd

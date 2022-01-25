@@ -1,0 +1,42 @@
+---
+- name: verify disks are still mounted
+  hosts: all,!managed-node-3
+  become: true
+  tasks:
+    - name: get disk data from stat
+      stat:
+        path: /dev/xvdb
+      register: statOut
+
+
+    - name: show disk
+      debug:
+        msg: "{{statOut}}"
+
+
+    - name: probe parted
+      parted:
+        device: /dev/xvda
+        unit: MiB
+      register: partedOut
+      tags:
+        - parted
+
+
+    - name: debug
+      debug:
+        msg: "{{partedOut}}"
+      tags:
+        - parted
+    - name: debugg
+      shell:
+        cmd: "mount"
+      register: shellOut
+      tags:
+        - shell
+
+    - name: debugggg
+      debug:
+        msg: "{{shellOut}}"
+      tags:
+       - shell

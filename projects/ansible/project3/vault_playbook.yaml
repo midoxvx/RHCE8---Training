@@ -1,0 +1,10 @@
+---
+- name: testing vault
+  hosts: localhost
+  vars_files:
+    - vars/users
+    - vars/secrets.yaml
+  tasks:
+     - name: print out encrypted variables
+       debug:
+         var: password1

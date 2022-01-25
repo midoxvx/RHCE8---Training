@@ -1,0 +1,9 @@
+sudoers:
+  - username: mohie
+    sudo: false
+  - username: meltem
+    sudo: true
+  - username: orhan
+    sudo: false
+  - username: nohut
+    sudo: true

@@ -1,0 +1,16 @@
+---
+- name: deploy hosts & motd
+  hosts: linux
+
+  tasks:
+  - name: deploy motd file
+    template:
+      src: motd.j2
+      dest: /etc/motd
+   
+
+  - name: deploy hosts file
+    template:
+      src: hosts.j2
+      dest: /etc/hosts
+    

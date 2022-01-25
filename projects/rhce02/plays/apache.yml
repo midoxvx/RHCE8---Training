@@ -1,0 +1,26 @@
+---
+- import_playbook: webroot.yml
+
+- name: setup apache
+  hosts: all
+  vars_files:
+    - vars/apachevars.yml
+  tasks:
+    - name: block of cheese
+      block:
+      
+       - name: my role 
+         include_role:
+          name: apache
+
+       - name: link webserver directory
+         file:
+            state: link
+            src: /webserver
+            dest: /var/www/html/webserver
+      rescue:
+        - name: clean up crew
+          import_tasks: cleanup.yml
+
+
+      when: "desired_host in group_names"

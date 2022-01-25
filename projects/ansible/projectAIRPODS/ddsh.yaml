@@ -1,0 +1,12 @@
+---
+- name: testing nested variables
+  hosts: localhost
+  vars:
+    - user1: testuser1
+    - user2: testuser2
+  tasks:
+    - name: lets see if the plugin works
+      debug: 
+        msg: "{{lookup('file', '/home/ansible/.ssh/id_rsa.pub')}}"
+
+      

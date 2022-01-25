@@ -1,0 +1,9 @@
+---
+# tasks file for httpd
+
+- name: Install httpd pacakge
+  yum:
+    name: "{{package}}"
+    state: latest
+  notify: start service
+

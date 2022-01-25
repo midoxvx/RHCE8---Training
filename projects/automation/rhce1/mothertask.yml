@@ -1,0 +1,14 @@
+---
+- name: testing
+  hosts: localhost
+  vars:
+    - names:
+        - mohie
+        - meltem
+  become: true
+  tasks:
+    - name: Including task
+      include_tasks: includedtask.yml
+      vars:
+         - loophole: "{{item}}"
+      loop: "{{names}}"

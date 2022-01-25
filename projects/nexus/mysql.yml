@@ -1,0 +1,15 @@
+---
+- name: calling the mysql role
+  hosts: database
+  vars_files:
+    - secret.yml
+  tasks:
+
+    - name: just debug message
+      debug:
+        msg: "You will become RHCE"
+
+    - name: Inclue role
+      include_role:
+        name: sample-mysql
+

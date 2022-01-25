@@ -1,0 +1,16 @@
+---
+- name: testing conditionals
+  hosts: localhost
+  vars:
+    array_me:
+      - one
+      - two
+      - three
+    moolah: false
+    moolax: true
+  tasks:
+  - name: print out some list
+    debug:
+      msg: "All is good in the hood"
+    when: not moolax
+

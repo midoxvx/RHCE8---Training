@@ -1,0 +1,14 @@
+---
+- name: create webroot and link it
+  hosts: webservers
+  tasks:
+
+
+    - name: Create /webserver directory
+      file:
+        state: directory
+        path: /webserver
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+
+

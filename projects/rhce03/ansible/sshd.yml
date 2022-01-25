@@ -1,0 +1,29 @@
+---
+- name: configure ssh server
+  hosts: all
+  tasks:
+    
+
+    - name: Change banner to motd
+      lineinfile:
+        regexp: '^Banner.*'
+        line: 'Banner /etc/motd'
+        state: present
+        path: /etc/ssh/sshd_config
+
+    - name: enable X11 forwarding
+      lineinfile:
+        regexp: '^X11Forwarding yes'
+        line: 'X11Forwarding YES'
+        state: present
+        path: /etc/ssh/sshd_config
+
+
+    - name: MaxAuth set to 3
+      lineinfile:
+        regexp: '^MaxAuthTries.*'
+        line: 'MaxAuthTries 6'
+        state: present
+        path: /etc/ssh/sshd_config
+
+

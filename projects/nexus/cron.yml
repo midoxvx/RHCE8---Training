@@ -1,0 +1,12 @@
+---
+- name: cron
+  hosts: proxy
+  tasks:
+    
+
+    - name: create cron tab
+      cron:
+        name: rhce
+        job: "echo $(date) >> /var/log/time.log"
+        hour: '*/1'
+        state: present

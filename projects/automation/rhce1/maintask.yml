@@ -1,0 +1,16 @@
+---
+- name: Testing looping users
+  hosts: localhost
+  become: true
+  vars_files:
+    - variables/userslist
+  tasks:
+     
+    - name: create webservers users only
+      include_tasks: functionusers.yml
+      vars:
+         - userName: "{{item.username}}"
+         - userShell: "{{item.shell}}"
+         - uID: "{{item.uid}}"
+      loop: "{{users}}"
+      when: uID is regex('^1')

@@ -1,0 +1,10 @@
+---
+- name: playing around with partitions
+  hosts: localhost
+  become: true
+  tasks:
+    - name: find partitions through facts
+      vars:
+        - bol: "{{true if ('xvdb' in ansible_facts['devices']) else (false)}}"
+      debug:
+        msg: "{{bol}}"

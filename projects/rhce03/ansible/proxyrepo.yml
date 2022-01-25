@@ -1,0 +1,25 @@
+---
+- name: create repo on proxy server
+  hosts: proxy
+  tasks:
+
+    - name: disable old repo
+      yum_repository:
+        name: rhce3
+        state: absent
+
+    - name: create new repo
+      yum_repository:
+          name: rhce
+          description: rhce-repo
+          baseurl: ftp://10.0.1.1/rhce
+          enabled: true
+          gpgcheck: false
+
+
+
+    - name: install HAproxy files
+      yum:
+        name: haproxy
+        state: present
+

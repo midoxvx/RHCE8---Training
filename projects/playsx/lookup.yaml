@@ -1,0 +1,22 @@
+---
+- name: lookup
+  hosts: localhost
+  become: true
+  tasks:
+
+
+    - name: loop through directory files
+      debug:
+        msg: "loop pass: {{item}}"
+      loop: "{{lookup('lines', 'ls -1 /tmp', wantlist=true)}}"
+      when: "item is regex('^p')"
+      tags:
+        - coco
+
+
+    - name: loop through file
+      debug:
+        msg: "loop pass: {{item}}"
+      loop: "{{lookup('file', '/tmp/file', wantlist=true)}}"
+      tags:
+        - loco

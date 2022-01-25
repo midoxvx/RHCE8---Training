@@ -1,0 +1,31 @@
+---
+- name: motd on all hosts
+  hosts: all
+  vars:
+    - proxy_host: 'Welcome to HAproxy Server'
+    - webserver_host: 'Welcome To Apache Server'
+    - database_host: 'Welcome to MySQL Server'
+    - storage_host: 'Welcome to storage Server'
+
+
+  tasks:
+    
+
+    - name: MOTD
+      copy:
+        dest: /etc/motd
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+        content: >
+              "{%if 'webservers' in group_names%}
+                {{webserver_host}}
+                {%elif 'database' in group_names%}
+                {{database_host}}
+                {%elif 'storage' in group_names%}
+                {{storage_host}}
+                {%elif 'proxy' in group_names%}
+                {{proxy_host}}
+                {%endif%}
+
+
+

@@ -1,0 +1,21 @@
+---
+- name: MOTD
+  hosts: all
+  become: true
+  vars:
+    - webMotd: "Welcome to Apache server"
+    - dbMotd: "Welcome to MySql server"
+    - proxyMotd: "Welcome to HaProxy server"
+  tasks:
+       - name: Modify message of the day based on variables
+         copy:
+           content: |
+                   "{%if 'webservers' in group_names %}
+                     {{webMotd}}
+                    {%elif 'proxy' in group_names%}
+                      {{proxyMotd}}
+                    {%elif 'database' in group_names %}
+                      {{dbMotd}}
+                      {%endif%}"
+           force: true
+           dest: /etc/motd

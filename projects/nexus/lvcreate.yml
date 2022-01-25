@@ -1,0 +1,12 @@
+---
+- name: create lv on managed-node-1
+  hosts: managed-node-2
+  tasks:
+
+    - name: gather facts
+      setup:
+    
+    - name: create first vg on sdb1
+      lvg:
+        pvs: /dev/sdb1
+        vg: vg_rhce

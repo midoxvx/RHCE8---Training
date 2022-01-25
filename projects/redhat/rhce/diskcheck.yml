@@ -1,0 +1,25 @@
+---
+- name: Checking on disks
+  hosts: all
+  become: true
+  vars: 
+    - size: "8 GB"
+  tasks:
+     - name: flatten facts
+       set_fact:
+         diskOut: "{{ansible_facts['devices'] | dictsort}}"
+       tags:
+        - always
+
+
+
+     - name: confirm secondary disk exists first
+       assert:
+         that: 
+           - "{{diskOut[1] is defined}}"
+         success_msg: "{{inventory_hostname}} has a secondary disk"
+         fail_msg: "{{inventory_hostname}} has no disk"
+
+     - name: disk size checker
+       debug:
+         msg: "{{ansible_facts['devices']['xvdb']['size']}}"

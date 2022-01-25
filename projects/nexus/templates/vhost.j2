@@ -1,0 +1,6 @@
+Listen 82
+
+<VirtualHost  *:82>
+    DocumentRoot  /webserver
+    ServerName  {{ansible_facts['fqdn']}}
+</VirtualHost>

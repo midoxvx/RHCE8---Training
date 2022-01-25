@@ -1,0 +1,41 @@
+---
+
+
+- name: install packages
+  yum:
+    name: "{{packages_to_install}}"
+    state: latest
+
+- name: service enable
+  service:
+    name: httpd
+    enabled: true
+
+- name: gather service facts
+  service_facts:
+
+
+- name: install firewalld
+  yum:
+    name: firewalld
+    state: latest
+  when: ansible_facts['services']['firewalld'] is not defined
+
+
+
+- name: template
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    force: true
+  notify: 
+  - firewall_handler
+  - restart_handler
+# tasks file for apache
+#
+#
+#
+# - name: restar_handler
+#   service:
+#     name: httpd
+#     state: restarted

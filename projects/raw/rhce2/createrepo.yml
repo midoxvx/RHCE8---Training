@@ -1,0 +1,14 @@
+---
+- name: create local repo
+  hosts: localhost
+  become: true
+  tasks: 
+    - name: create repo
+      yum_repository:
+          name: LocalFTP
+          description: local ftp repo
+          state: present
+          enabled: true
+          baseurl: ftp://{{ansible_facts['hostname']}}/ftpd/
+          gpgcheck: no
+

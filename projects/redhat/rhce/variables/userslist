@@ -1,0 +1,13 @@
+users:
+  - username: rhce1
+    shell: /bin/bash
+    uid: 1100
+  - username: rhce2
+    shell: /bin/bash
+    uid: 1110
+  - username: rhce3
+    shell: /bin/bash
+    uid: 2100
+  - username: rhce4
+    shell: /bin/bash
+    uid: 2200

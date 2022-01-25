@@ -1,0 +1,15 @@
+all:
+  hosts:
+    managed-node-1:
+    managed-node-2:
+    managed-node-3:
+    managed-node-4:
+  children:
+    redhatservers:
+      hosts:
+        managed-node-1:
+        managed-node-2:
+    centosservers:
+      hosts:
+        managed-node-3:
+        managed-node-4:

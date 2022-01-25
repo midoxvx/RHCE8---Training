@@ -1,0 +1,46 @@
+---
+- name: creating users and matching them to groups
+  vars_files:
+    - vars/users.yml
+    - vars/secrets.yml
+  hosts: all
+  tasks:
+
+
+    - name: create group devops on webservers
+      group:
+        name: devops
+        state: present
+      when: "'webservers' in group_names"
+
+    - name: create group managers on database
+      group:
+        name: managers
+        state: present
+      when: "'database' in group_names"
+
+    - name: create users who are only developers on webservers
+      user:
+        name: "{{devops.name}}"
+        state: present
+        groups: devops
+        append: yes
+        password: "{{developer_password | password_hash('sha512', 'rhce')}}"
+        update_password: on_create
+      loop: "{{users}}"
+      loop_control:
+        loop_var: devops
+      when: ('webservers' in group_names and devops.job | lower == 'developer')
+
+    - name: create users who are only managers on database
+      user:
+        name: "database.name"
+        state: present
+        groups: managers
+        password: "{{managers_password | password_hash('sha512', 'rhce')}}"
+        update_password: on_create
+      loop: "{{users}}"
+      loop_control:
+        loop_var: database
+      when: ('database' in group_names and database.job | lower == 'manager')
+

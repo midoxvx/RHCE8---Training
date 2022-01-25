@@ -1,0 +1,10 @@
+---
+users:
+  - name: joeblow
+    job: developer
+  - name: karen
+    job: developer
+  - name: mike
+    job: manager
+  - name: jackie
+    job: manager

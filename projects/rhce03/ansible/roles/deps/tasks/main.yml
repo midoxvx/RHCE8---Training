@@ -1,0 +1,13 @@
+---
+- name: install firewalld
+  yum:
+    name: firewalld
+    state: present
+
+- name: python core
+  yum:
+    name: policycoreutils-python-utils
+    state: present
+
+
+# tasks file for deps

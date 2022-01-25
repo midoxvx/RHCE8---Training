@@ -1,0 +1,34 @@
+---
+
+
+- name: packages installation
+  yum:
+    name:
+      - httpd
+      - mod_ssl
+      - php
+    state: present
+  
+- name: tempalte deploy
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    force: true
+  notify: restart_http
+
+- name: firewalld
+  firewalld:
+    service: "{{item}}"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  loop:
+    - http
+    - https
+- name: start http
+  service: 
+    name: httpd
+    state: started
+    enabled: yes
+
+# tasks file for apache

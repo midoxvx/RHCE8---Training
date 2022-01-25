@@ -1,0 +1,7 @@
+{% for line in lookup('file','/etc/hosts', wantlist=true)%}
+	{%if line is defined %}
+{{line}}
+	{%elif line is not defined%}
+#
+{%endif%}
+{%endfor%}

@@ -1,0 +1,16 @@
+---
+- name: playbook to loop over lists
+  hosts: localhost
+  vars:
+    - my_list:
+        - one
+        - two
+        - three
+    - cond: one
+  tasks:
+    - name: lets loop
+      debug: 
+        msg: "success"
+      loop: "{{my_list}}"
+      when: cond in my_list
+

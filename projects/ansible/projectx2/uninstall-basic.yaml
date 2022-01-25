@@ -1,0 +1,12 @@
+---
+- name: Install Basic packages
+  hosts: all
+  vars_files:
+  - variables/basic_packages
+  tasks:
+    - name: Basic packages
+      yum:
+        name: "{{basicPackages}}"
+        state: absent
+        autoremove: yes
+      loop: "{{basicPackages}}"

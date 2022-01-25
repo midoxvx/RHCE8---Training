@@ -1,0 +1,15 @@
+---
+- name: conditionals for disks
+  hosts: all
+  tasks:
+
+    - name: assert it
+      assert:
+        that:
+          - "'vg_database' in ansible_facts['lvm']['vgs']"
+        fail_msg: "We don't have that volume group"
+
+
+    - name: debug
+      debug:
+        msg: "only {{inventory_hostname}} has that"

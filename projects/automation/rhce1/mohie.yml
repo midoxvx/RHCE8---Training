@@ -1,0 +1,8 @@
+---
+- name: test filters
+  hosts: localhost
+  become: true
+  tasks:
+    - name: let's debug
+      debug: 
+        msg: "{{ansible_facts['distribution'] | lower}}"

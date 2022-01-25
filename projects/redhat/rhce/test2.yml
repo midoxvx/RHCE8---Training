@@ -1,0 +1,38 @@
+---
+- name: loop test
+  hosts: localhost
+  vars_files:
+    - variables/sudolist
+  vars:
+    - users:
+       - username: mohie
+         groups:
+            - wheel
+            - steel
+         age: 38
+  tasks: 
+     - name: loop
+       vars:
+         - command: "cat /etc/hosts"
+       debug: 
+         msg: "{{item}}"
+       loop: "{{users[0]['groups']}}"
+       tags:
+         - flatme
+
+
+     - name: template
+       template: 
+         src: sudox.j2
+         dest: /tmp/sudojijna
+         force: yes
+       tags:
+         - testtemplate
+
+
+     - name: group mod
+       group:
+         name: "{{item['groups'] | flatten(1)}}"
+       loop: "{{users}}"
+       tags:
+        - creategroup

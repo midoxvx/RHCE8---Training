@@ -1,0 +1,10 @@
+---
+- name: task1
+  hosts: localhost
+  tasks:
+
+
+
+    - name: task1
+      debug:
+        msg: "first task requires a vault"

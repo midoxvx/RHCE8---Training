@@ -1,0 +1,55 @@
+---
+- name: create a local repo
+  hosts: localhost
+  tasks:
+
+      - name: Install vsftp
+        yum:
+          name: vsftpd
+          state: latest
+
+      - name: configure vsftpd to allow anonymous login
+        lineinfile:
+          regexp: '^anonymous_enable=NO'
+          line: 'anonymous_enable=YES'
+          path: /etc/vsftpd/vsftpd.conf
+          state: present
+      - name: create /var/ftp/rhce directory
+        file:
+          state: directory
+          path: /var/ftp/rhce
+          owner: "{{ansible_user}}"
+          group: "{{ansible_user}}"
+
+      - name: download haproxy, ftp and vsftpd packages
+        yum:
+          name:
+            - haproxy
+            - ftp
+          download_only: true
+          download_dir: /var/ftp/rhce
+
+      - name: create repository
+        shell:
+          cmd: "createrepo -v /var/ftp/rhce"
+  
+      - name: trigger handlers
+        debug:
+          msg: "starting services now"
+        notify:
+          - service_vsftpd
+          - firewall_vsftpd
+        changed_when: true
+
+  handlers:
+      - name: service_vsftpd
+        service:
+          name: vsftpd
+          state: started
+          enabled: true
+      - name: firewall_vsftpd
+        firewalld:
+          service: ftp
+          state: enabled
+          immediate: true
+          permanent: true

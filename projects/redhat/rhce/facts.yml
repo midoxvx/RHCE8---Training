@@ -1,0 +1,22 @@
+---
+- name: testing stuff
+  hosts: localhost
+  become: true
+  tasks:
+
+
+    - name: gather facts
+      setup:
+      tags:
+        - always
+
+    - name: factscheck
+      set_fact:
+        devicesOut: "{{ansible_facts['devices'] | dictsort}}" 
+
+         
+
+    - name: print out
+      debug:
+        msg: "{{devicesOut[1][1].size}}"
+      when: devicesOut[1] is defined

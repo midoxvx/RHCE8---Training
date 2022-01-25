@@ -1,0 +1,16 @@
+---
+- name: create ha proxy
+  hosts: proxy
+  vars_files:
+    - vars/haproxy.yml
+
+  tasks:
+    - name: set ha boolean
+      seboolean:
+        name: haproxy_connect_any
+        state: yes
+        persistent: yes
+
+    - name: HA HA
+      include_role:
+        name: haproxy

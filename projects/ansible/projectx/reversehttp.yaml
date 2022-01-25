@@ -1,0 +1,9 @@
+---
+- name: Remove http
+  hosts: cloudservers
+  tasks:
+    - name: stop http
+      service:
+        state: stopped
+        name: httpd
+        enabled: false

@@ -1,0 +1,11 @@
+---
+- name: creating cron tab for user root
+  hosts: proxy
+  become: true
+  tasks:
+    - name: Creat cron job
+      cron:
+        name: kron
+        minute: "*/1"
+        job: "echo $(date) >> /var/log/time.log"
+

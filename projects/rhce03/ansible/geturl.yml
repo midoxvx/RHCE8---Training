@@ -1,0 +1,12 @@
+---
+- name: download template
+  hosts: localhost
+  tasks:
+
+    - name: get template
+      get_url:
+        url: http://cloud-node-1/webserver/my.cnf.j2
+        dest: /home/rhce3/ansible/roles/sample-mysql/templates
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+

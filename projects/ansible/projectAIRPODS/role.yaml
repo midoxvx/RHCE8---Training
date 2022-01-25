@@ -1,0 +1,5 @@
+---
+- name: testing roles
+  hosts: localhost
+  roles:
+    - role: testrole

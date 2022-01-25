@@ -1,0 +1,9 @@
+---
+- name: repodisable
+  hosts: managed-node-1
+  tasks:
+
+    - name: disable
+      yum_repository:
+        name: '*'
+        enabled: false

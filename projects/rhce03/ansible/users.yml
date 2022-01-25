@@ -1,0 +1,50 @@
+---
+- name: create users
+  hosts: all
+  vars_files:
+    - vars/user_list.yml
+    - secret.yml
+  tasks:
+
+
+      - name: create users on webservers only
+        user:
+          name: "{{web.username}}"
+          password: "{{user_password | password_hash('sha512', 'rhce')}}"
+          update_password: on_create
+          groups: wheel
+          append: true
+          shell: /bin/bash
+          state: present
+        loop: "{{users}}"
+        loop_control:
+          loop_var: web
+        when: ('webservers' in group_names and web.uid is regex('^1'))
+
+
+      - name: create users on webservers only
+        user:
+          name: "{{db.username}}"
+          password: "{{user_password | password_hash('sha512', 'rhce')}}"
+          update_password: on_create
+          groups: wheel
+          append: true
+          shell: /bin/bash
+          state: present
+        loop: "{{users}}"
+        loop_control:
+          loop_var: db
+        when: ('database' in group_names and db.uid is regex('^2'))
+
+
+
+      - name: generate sshkeys
+        authorized_key:
+            user: "{{sshkey.username}}"
+            state: present
+            key: "{{lookup('file','/home/rhce3/.ssh/id_rsa.pub')}}"
+        loop: "{{users}}"
+        loop_control:
+          loop_var: sshkey
+        when: ('webservers' in group_names or 'database' in group_names)
+

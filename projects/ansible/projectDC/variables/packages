@@ -1,0 +1,6 @@
+packages:
+ - httpd
+ - wget
+
+optional:
+ - python

@@ -1,0 +1,10 @@
+---
+- name: check lvm
+  hosts: managed-node-2
+  become: true
+  tasks:
+
+
+    - name: check lvm parameters
+      debug:
+        msg: "{{ansible_facts['devices']['sdb']['partitions']['sdb1']['size']}}"

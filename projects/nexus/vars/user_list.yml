@@ -1,0 +1,14 @@
+---
+users:
+  - username: alice
+    uid: 1210
+  - username: vincent
+    uid: 1220
+  - username: sandy
+    uid: 2220
+  - username: patrick
+    uid: 2230
+
+
+
+shell : /bin/bash

@@ -1,0 +1,48 @@
+---
+- name: setup repo locally
+  hosts: localhost
+  vars:
+    - package: vsftpd
+  tasks:
+
+
+    - name: install vsftpd
+      yum:
+        name: "{{package}}"
+    - name: configure vsftpd to allow anonymous
+      lineinfile:
+        regexp: '^anonymous_enable=NO'
+        line: 'anonymous_enable=YES'
+        state: present
+    - name: create /var/ftp/rhce
+      file:
+        state: directory
+        path: /var/ftp/rhce
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+
+    - name: start vsftpd service
+      service:
+        name: vsftpd
+        state: started
+        enabled: true
+
+    - name: allow ftp service on firewall
+      firewalld:
+        service: ftp
+        state: enabled
+        immediate: true
+        permanent: true
+
+    - name: download ntp package create repo
+      yum:
+        download_only: true
+        download_dir: /var/ftp/rhce
+        name: nmap
+        state: present
+
+    - name: create repo
+      shell:
+        cmd: "createrepo -v /var/ftp/rhce"
+
+

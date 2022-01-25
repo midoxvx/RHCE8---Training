@@ -1,0 +1,11 @@
+---
+- name: hosts template
+  hosts: all
+  become: true
+  tasks:
+     - name: template
+       template: 
+          src: hosts.j2
+          dest: /tmp/jinjax
+          force: true
+

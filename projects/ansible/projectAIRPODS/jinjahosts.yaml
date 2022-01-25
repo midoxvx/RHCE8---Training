@@ -1,0 +1,9 @@
+---
+- name: Propagate hosts file
+  hosts: all
+  tasks:
+    - name: Use jinja2 template based on control node hosts file
+      template:
+         src: hosts.j2
+         dest: /etc/hosts
+

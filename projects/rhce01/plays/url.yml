@@ -1,0 +1,13 @@
+---
+- name: download file
+  hosts: localhost
+  tasks:
+
+
+    - name: download the template file first
+      get_url:
+        url: http://cloud-node-1/webserver/hwreport.txt
+        dest: /tmp/hwreport.txt
+
+
+

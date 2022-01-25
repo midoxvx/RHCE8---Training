@@ -1,0 +1,12 @@
+---
+- name: task1
+  hosts: localhost
+  vars_files:
+    - vars/secret.yaml
+  tasks:
+
+
+
+    - name: task1
+      debug:
+        msg: "first task requires a vault"

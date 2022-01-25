@@ -1,0 +1,13 @@
+---
+- name: Test list
+  hosts: cloudservers
+  vars_files: 
+  - vars/user-list
+  tasks:
+  -  name: Debug loop
+     debug:
+       msg: "Hello {{ item.username }} {{ item.shell }}"
+     loop: "{{users}}"
+  -  name: Debug single element
+     debug:
+       msg: "Hello {{ users[1]}}"

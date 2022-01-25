@@ -1,0 +1,8 @@
+---
+- name: playbook to be imported
+  hosts: all
+  become: true
+  tasks:
+    - name: print some bullshit
+      debug:
+        msg: "{{ansible_facts['fqdn']}}"

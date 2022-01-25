@@ -1,0 +1,16 @@
+---
+- name: regex
+  hosts: localhost
+  tasks:
+
+
+    - name: add guid
+      file:
+        state: touch
+        mode: g-s
+        path: /tmp/httpd.conf
+    - name: regex
+      replace:
+        regexp: '(\s+)AllowOverride none'
+        replace: '\1AllowOverride all'
+        path: /tmp/httpd.conf

@@ -1,0 +1,6 @@
+---
+- name: test includes
+  hosts: localhost
+  tasks:
+    - name: Including a task
+      import_playbook: funplay.yaml

@@ -1,0 +1,27 @@
+---
+- name: Block in line module test
+  hosts: localhost
+  vars:
+    - file_path: "/tmp/sshd"
+  tasks:
+    - name: blockinfile pilot test
+      blockinfile:
+        block: |
+          PasswordAuthentication yes
+        path: "{{file_path}}"
+     
+    - name: block in file loop test
+      blockinfile:
+        block: |
+          {{item.username}}
+          {{item.shell}}
+        path: "{{file_path}}"
+      loop:
+        - {username: Mohie, shell: /bin/bash}
+        - {username: Melike, shell: /sbin/nologin}
+    
+    - name: block in file lookup plugin test
+      blockinfile:
+        block: "{{lookup('file', '/tmp/lookupfile')}}"
+        path: "{{file_path}}"
+      register: blockoutput

@@ -1,0 +1,19 @@
+---
+- name: mount opts
+  hosts: localhost
+  become: true
+  tasks:
+
+    - name: mount command output
+      shell:
+        cmd: "mount | grep -i sunrpc"
+      register: shellOut
+
+    - name: make sure this is true
+      assert:
+        that:
+          - "{{ shellOut.rc == 0}}"
+
+    - name: debug
+      debug:
+        var: shellOut.rc

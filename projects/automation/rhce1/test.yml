@@ -1,0 +1,22 @@
+---
+- name: testing user conditionals
+  hosts: localhost
+  vars:
+    - users:
+        - username: alice
+          uid: 1201
+        - username: vincent
+          uid: 1202
+        - username: sandy
+          uid: 2201
+        - username: patrick
+          uid: 2202
+
+  become: true
+  tasks:
+    - name: Let's see how can we loop
+      debug:
+        msg: "{{item.username}}"
+      loop: "{{users}}"
+      when: item.uid is regex('^1')
+

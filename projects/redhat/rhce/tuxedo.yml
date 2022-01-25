@@ -1,0 +1,20 @@
+---
+- name: Printing out a separate message
+  hosts: all
+  become: true
+  vars:
+   - webservers: "Welcome to Web server"
+   - database: "Welcome to Database server"
+  tasks:
+
+    - name: Print custom message
+      blockinfile:
+          block: |
+              "{%if 'webservers' in group_names%}
+                   webservers
+               {%elif 'database' in group_names%}
+                   database
+               {%endif%}"
+          path: /tmp/welcometest
+          create: true
+          

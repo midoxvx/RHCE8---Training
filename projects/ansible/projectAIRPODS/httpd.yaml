@@ -1,0 +1,53 @@
+---
+- name: Managing web server SElinux properties
+  hosts: localhost
+  tasks:
+    - name: Ensure SElinux is installed
+      selinux:
+         policy: targeted
+         state: enforcing
+    - name: Install Web Server
+      yum:
+         name: httpd
+         state: latest
+
+    - name: Start and Enable Web Server
+      service:
+        name: httpd
+        state: started
+        enabled: true
+    - name: check if firewalld is installed
+      ignore_errors: true
+      shell:
+        cmd: "systemctl is-enabled firewalld"
+      register: shellOut
+
+    - name: Open the Firewall Service
+      firewalld:
+        service: "{{item}}"
+        state: enabled
+      loop:
+        - http
+        - https
+      when: shellOut['rc'] == '0'
+
+    - name: Create /web directory
+      file:
+         state: directory
+         mode: '0755'
+         owner: ansible
+         group: ansible
+         path: /web
+    - name: Create index.html inside /web
+      file:
+         state: touch
+         mode: '0644'
+         owner: ansible
+         group: ansible
+         path: /web/index.html
+
+    - name: Change document root in httpd.conf
+      lineinfile:
+         regex: '^DocumentRoot \"/var/www/.*\"'
+         line: "DocumentRoot /web"
+         path: /etc/httpd/conf/httpd.conf

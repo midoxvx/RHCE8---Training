@@ -1,0 +1,69 @@
+---
+- name: disk volume formatter
+  hosts: all
+  become: true
+  vars:
+    - diskName: "xvdb"
+  tasks:
+
+    - name: gather facts
+      setup:
+      tags:
+        - always
+
+    - name: first check for existence of second disk and break if not
+      assert:
+        that:
+          - "{{ansible_facts['devices'][diskName] is defined}}"
+        fail_msg: "{{inventory_hostname}} does not have a second disk"
+      tags:
+        - always
+
+    - name: install lvm2 package
+      yum:
+        name: lvm2
+        state: latest
+
+    - name: create remote mount directory
+      file:
+        state: directory
+        path: /ansiblemount
+        
+    - name: create disk block
+      block:
+         - name: create partition
+           parted:
+             device: /dev/{{diskName}}
+             number: 1
+             part_start: 1MB
+             part_end: 800MB
+             flags:
+               - lvm
+         - name: create volume group
+           lvg:
+             pvs: /dev/{{diskName}}
+             vg: ansibleg
+             pesize: 512k
+
+         - name: create lvm
+           lvol:
+             lv: ansiblelv
+             vg: ansibleg
+             size: 100%FREE
+           tags:
+            - last
+         - name: create filesystem
+           filesystem:
+             dev: /dev/ansibleg/ansiblelv
+             fstype: xfs
+           tags:
+             - last
+         - name: mount file systems
+           mount:
+             path: /ansiblemount
+             src: /dev/ansibleg/ansiblelv
+             fstype: xfs
+             state: mounted
+           tags:
+             - tlou
+      when: vax == 'go'

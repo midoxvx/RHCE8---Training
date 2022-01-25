@@ -1,0 +1,80 @@
+---
+- name: devices play
+  hosts: all
+  become: true
+  vars:
+   - mountDirectory: /ansible-mount
+  tasks:
+
+
+    - name: Assertion
+      assert:
+        that:
+          - ( ansible_facts['devices']['sdb'] is defined and ansible_facts['devices']['sdb']['sdb1'] is not defined)
+        quiet: yes
+
+    - name: get disk information
+      parted:
+        device: /dev/sdb
+        unit: GiB
+      register: partedOut
+
+    - name: Print disk info
+      debug:
+        msg: "{{partedOut.disk.size}}"
+
+    - name: create {{mountDirectory}}
+      file:
+        state: directory
+        path: "{{mountDirectory}}"
+    - name: stat {{mountdirectory}}
+      stat:
+        path: "{{mountDirectory}}"
+      register: statOut
+
+
+    - name: Block for creating LVM
+      block:
+        - name: create partition
+          parted:
+            device: /dev/sdb
+            number: 1
+            state: present
+            part_start: 1MiB
+            part_end: 3GiB
+            flags:
+              - lvm
+        - name: create volume group
+          lvg:
+            vg: ansiblevg
+            pvs: /dev/sdb1
+            pesize: 512KB
+
+        - name: create logicalvolume
+          lvol:
+            vg: ansiblevg
+            lv: ansiblelvol
+            size: 2g
+
+        - name: create filesystem
+          filesystem:
+            fstype: xfs
+            dev: /dev/ansiblevg/ansiblelvol
+
+        - name: mount the filesystem
+          mount:
+            src: /dev/ansiblevg/ansiblelvol
+            path: /{{mountDirectory}}
+            fstype: xfs
+            state: mounted
+          notify: reboothandler
+      when:
+        - partedOut.disk.size > 5
+        - statOut.stat.isdir
+
+
+  handlers:
+    - name: reboothandler
+      reboot:
+      register: rebootOut
+

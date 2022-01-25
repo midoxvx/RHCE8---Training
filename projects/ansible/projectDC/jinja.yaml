@@ -1,0 +1,12 @@
+---
+- name: testing jinja loops
+  hosts: all
+  vars:
+  - myname: mohie
+  - myage: 38
+  tasks: 
+  - name: loop loop loop
+    template:
+      src: conditionals.j2
+      dest: /tmp/conditionals.jijj
+

@@ -1,0 +1,6 @@
+---
+- include_tasks: install_apache.yml
+
+- include_tasks: apache_services.yml
+
+# tasks file for apache

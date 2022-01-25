@@ -1,0 +1,26 @@
+---
+- name: install http server
+  hosts: webserver
+  become: true
+  vars:
+    - web_package: httpd
+    - web_service: httpd
+    - web_config_file: /etc/http/httpd.conf
+    - web_root: /web
+  tasks:
+
+    - name: install httpd
+      yum:
+        name: "{{web_package}}"
+        state: latest
+    - name:
+      file:
+        state: directory
+        path: /web
+
+    - name: template vhost
+      template:
+        src: vhost.j2
+        dest: /etc/httpd/conf.f/vhost.conf
+        force: yes
+

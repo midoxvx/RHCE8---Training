@@ -1,0 +1,28 @@
+---
+- name: download httpd packages and configure it to start
+  vars:
+    - htmlPath: /var/www/html/index.html
+  hosts: all
+  tasks:
+    - name: httpd block
+      block:
+        - name: install httpd daemon
+          yum:
+            name: httpd
+            state: absent
+          register: httpdStdout
+
+        - name: configure httpd webpage
+          template:
+             src: httpd.j2
+             dest: "{{htmlPath}}"
+          when: httpdStdout != '0'
+
+
+  handlers:
+  - name: start services
+    service:
+       name: httpd
+       state: started
+       enabled: true
+

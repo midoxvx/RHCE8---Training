@@ -1,0 +1,52 @@
+---
+- name: Testing few things
+  hosts: all
+  vars:
+    - remoteDirectoryPath: /tmp/fetch
+    - userCheck: ansible
+  tasks:
+    - name: Create directory, touch some files, write some lines
+      block:
+        - name: Create a remote directory
+          file: 
+            state: directory
+            owner: "{{ansible_user}}"
+            group: "{{ansible_user}}"
+            mode: "u=rwx,g=rwx,o=rw"
+            path: "{{remoteDirectoryPath}}"
+        
+        - name: create files
+          file:
+            state: touch
+            owner: "{{ansible_user}}"
+            group: "{{ansible_user}}"
+            mode: "u=rwx,g=rw"
+            path: "{{remoteDirectoryPath}}/modifyme"
+
+        - name: write some blocks
+          blockinfile:
+            block: "{{lookup('file', '/tmp/file')}}"
+            path: "{{remoteDirectoryPath}}/modifyme"
+            marker: "{mark} Poetry"
+            marker_begin: "Start"
+            marker_end: "finish"
+
+        - name: fetch stats
+          stat:
+            path: "{{remoteDirectoryPath}}/modifyme"
+          register: statOut
+
+        - name: show me stats
+          debug:
+            msg: |
+             "{{statOut['stat']['mode']}}
+             {{statOut['stat']['checksum']}}
+             {{statOut['stat']['size']}}"
+
+      when: ansible_user == userCheck  
+
+
+      always:
+        - name: End of block
+          debug:
+            msg: "Block ended"

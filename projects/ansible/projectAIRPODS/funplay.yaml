@@ -1,0 +1,7 @@
+---
+- name: play to be imported
+  hosts: localhost
+  tasks:
+    - debug:
+        msg: "imported task message"
+

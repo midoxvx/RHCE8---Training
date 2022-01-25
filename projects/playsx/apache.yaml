@@ -1,0 +1,6 @@
+---
+- name: use apache role
+  hosts: cloud-node-1
+  become: true
+  roles:
+    - apache

@@ -1,0 +1,10 @@
+---
+- name: testing serial processing
+  hosts: all
+  become: true
+  serial: 2
+  tasks:
+    - name: remove httpd
+      yum:
+        name: httpd
+        state: absent

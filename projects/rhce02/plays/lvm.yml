@@ -1,0 +1,11 @@
+---
+- name: gather lvm facts
+  hosts: managed-node-1
+  tasks:
+
+   - name: gather facts
+     setup:
+
+   - name: debug
+     debug:
+       msg: "{{ansible_facts['lvm']['vgs']}}"

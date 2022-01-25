@@ -1,0 +1,20 @@
+---
+- name: use the ssh role
+  hosts: all
+  become: true
+  vars:
+   - ANSIBLE_SSH_PORT: 2022
+   - ANSIBLE_ALLOWED_USER: ansible
+  pre_tasks:
+    - name: check if selinux is installed
+      shell:
+        cmd: "getenforce"
+      register: seOut
+
+    - name: set enforcing if seOut is not
+      assert:
+        that:
+          - "{{ seOut['stdout'] | lower == 'enforcing' }}"
+
+  roles:
+    - ssh

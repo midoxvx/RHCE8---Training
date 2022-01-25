@@ -1,0 +1,18 @@
+---
+- name: Install cloud server packages
+  hosts: cloudservers
+  vars_files: 
+   - variables/users
+   - variables/packages
+  tasks:
+   - name: Install packages
+     yum:
+       name: "{{packages}}"
+       state: latest
+     loop: "{{packages}}"
+
+   - name: Activate one package
+     debug:
+       msg: this is the right package {{packages}}
+     loop: "{{packages}}"
+     when: packages == "httpd"

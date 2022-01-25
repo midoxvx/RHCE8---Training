@@ -1,0 +1,13 @@
+users:
+ - name: mohie
+   shell: /bin/bash
+   group: ansible
+
+ - name: meltem
+   shell: /sbin/nologin
+   group: ansible
+
+ - name: fuat
+   shell: /bin/bash
+   group: finance
+

@@ -1,0 +1,13 @@
+---
+- name: first jinja template test
+  hosts: all
+  vars:
+  - age: 38
+  tasks: 
+  - name: Template module rendering
+    template:
+      src: jinja2.j2
+      dest: /tmp/jinjaaaa
+
+
+

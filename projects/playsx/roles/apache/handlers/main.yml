@@ -1,0 +1,18 @@
+---
+- name: restart_handler
+  service:
+    name: httpd
+    state: restarted
+
+
+
+
+
+- name: firewall_handler
+  firewalld:
+    port: "{{item}}"
+    immediate: true
+    permanent: true
+    state: enabled
+  loop: "{{tcp_ports}}"
+# handlers file for apache

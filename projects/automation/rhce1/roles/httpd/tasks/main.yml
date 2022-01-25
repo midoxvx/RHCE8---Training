@@ -1,0 +1,34 @@
+---
+# tasks file for httpd
+
+- name: Install {{webPackage}}
+  yum:
+    name: "{{webPackage}}"
+    state: latest
+
+
+
+- name: create {{webRoot}} directory
+  file:
+    state: directory
+    path: "{{webRoot}}"
+    
+- name: use template for virtual hosts
+  template:
+     src: vhost.j2
+     dest: /etc/httpd/conf.d/vhost.conf
+
+- name: create index.html
+  blockinfile:
+     block: "{mark} Welcome to my Server from role"
+     state: present
+     path: /web2/index.html
+     create: true
+  notify:
+     - secontrols
+     - seportset
+
+
+#start service
+#firewall port
+#

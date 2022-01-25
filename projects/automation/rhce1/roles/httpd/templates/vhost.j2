@@ -1,0 +1,5 @@
+{% extends "virtualhost.j2" %}
+{% block config %}
+  DocumentRoot	{{ webRoot }}
+  ServerName   {{ ansible_facts['fqdn'] }}
+{% endblock %}

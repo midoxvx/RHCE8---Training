@@ -1,0 +1,31 @@
+---
+- name: ssh snap in configuration
+  hosts: all
+  become: yes
+  vars:
+   - snapInDirectory: /etc/ssh/ssh_config.d
+   - snapInConfig: /etc/ssh/ssh_config.d/sshd_config
+  tasks:
+ 
+    - name: create {{snapInDirectory}} if it doesn't exist
+      file:
+        state: directory
+        path: "{{snapInDirectory}}"
+      when: snapInDirectory is not exists
+
+
+    - name: Deploy ssh snap-in template
+      template: 
+        src: sshd.j2
+        dest: "{{snapInConfig}}"
+      notify: restart sshd
+
+
+
+  handlers:
+    - name: restart sshd
+      service:
+         name: sshd
+         state: restarted
+         enabled: true
+        

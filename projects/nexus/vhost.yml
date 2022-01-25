@@ -1,0 +1,98 @@
+---
+- name: install proxy webservers
+  hosts: webservers
+  tasks:
+    
+    - name: install httpd mod_ssl and php package
+      yum:
+        name: 
+          - httpd
+          - mod_ssl
+          - php
+          - firewalld
+        state: present
+    - name: firewall start
+      service:
+        name: firewalld
+        state: started
+        enabled: true
+     
+    - name: create webserver directory
+      file:
+        state: directory
+        path: /webserver
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+
+    - name: create symlink
+      file:
+        state: link
+        src: /webserver
+        dest: /var/www/html/webserver
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+    
+    - name: create main index.html
+      copy:
+        content: "Welcome to main webserver page"
+        dest: /var/www/html/index.html
+
+    - name: create index.html inside webserver
+      copy:
+        content: "This is proxy webserver and my ip is {{ansible_facts['default_ipv4']['address']}}"
+        dest: /var/www/html/webserver/index.html
+
+    - name: create vhost that points to /var/www/html/webserver as root
+      template:
+        src: vhost.j2
+        dest: /etc/httpd/conf.d/vhost.conf
+        force: true
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+    - name: regex
+      replace:
+        regexp: '(\s+)AllowOverride none'
+        replace: '\1AllowOverride All'
+        path: /etc/httpd/conf/httpd.conf
+
+    - name: regex2
+      replace:
+        regexp: '(\s+)Require all denied'
+        replace: '\1Require all granted'
+        path: /etc/httpd/conf/httpd.conf
+
+    - name: enable firewall
+      firewalld:
+        service: http
+        state: enabled
+        permanent: true
+        immediate: true
+
+    - name: selinux
+      sefcontext:
+        setype: httpd_config_t
+        state: present
+        target: '/var/www/html/(.*/)?'
+    - name: seport
+      seport:
+        ports: 82
+        proto: tcp
+        setype: http_port_t
+        state: present
+    - name: port 82
+      firewalld:
+        port: 82/tcp
+        state: enabled
+        immediate: true
+        permanent: true
+
+    - name: semanage
+      shell:
+        cmd: "restorecon -Rv /var/www/html"
+    - name: start service
+      service:
+        name: httpd
+        state: restarted
+        enabled: true
+
+

@@ -1,0 +1,34 @@
+---
+- name: block error handling testing
+  hosts: localhost
+  vars:
+    - myName: mohie
+  tasks:
+    - name: block test
+      block:
+        - name: first task success
+          debug:
+            msg: "I am a successful task inside the block"
+
+        - name: second task will fail
+          shell:
+            cmd: "echo 13"
+          register: echoOut
+          failed_when: echoOut.stdout == '13'
+
+        - name: third task will succeed
+          debug:
+            msg: "I will never execute unless......"
+       
+
+      rescue:
+        - name: I should appear anyway
+          debug: 
+            msg: "I appear anyway"
+        
+
+        - name: I will appear under some condition
+          debug: 
+            msg: "Conditional apperance is conditional"
+          when: echoOut.stdout == "13"
+

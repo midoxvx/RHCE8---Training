@@ -1,0 +1,22 @@
+---
+- name: add users
+  hosts: all
+  vars_files:
+    - variables/users
+    - variables/default_password
+  tasks:
+    - name: add users
+      user:
+        name: "{{item.name}}"
+        shell: "{{item.shell}}"
+      loop: "{{users}}"
+      notify: password_set
+
+
+  handlers: 
+    - name: password_set
+      user:
+        name: "{{item.name}}"
+        password: "{{user_password}}"
+      loop: "{{users}}"
+

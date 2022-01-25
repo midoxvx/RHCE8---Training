@@ -1,0 +1,8 @@
+{% for user in sudoers %}
+ {% if user['sudo'] %}
+{{user['username']}} soup with extra creme
+{% else %}
+
+# {{user['username']}} no soup for them
+ {%endif%}
+{%endfor%}

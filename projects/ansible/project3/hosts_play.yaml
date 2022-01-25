@@ -1,0 +1,8 @@
+---
+ - name: Propagate Hosts File
+   hosts: all
+   tasks:
+     - name: Copy hosts file
+       copy:
+          src: /etc/hosts
+          dest: /tmp/hosts

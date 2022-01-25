@@ -1,0 +1,29 @@
+- hosts: managed-node-1
+  become: true
+  tasks:
+
+
+  - name: create dummy users
+    user:
+      name: "{{item}}"
+      state: present
+      shell: /bin/bash
+    loop:
+      - testuser1
+      - testuser2
+  - name: "Configure ssh clients"
+    include_role:
+      name: rhel-system-roles.ssh
+    vars:
+      ssh_user: "{{userName}}"
+      ssh:
+        Compression: true
+        GSSAPIAuthentication: no
+        ControlMaster: auto
+      ssh_ForwardX11: no
+    loop:
+      - testuser1
+      - testuser2
+    loop_control:
+      loop_var: userName
+

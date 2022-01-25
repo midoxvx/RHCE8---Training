@@ -1,0 +1,10 @@
+---
+- name: shortname
+  hosts: all
+  become: true
+  ignore_unreachable: yes
+  tasks:
+
+    - name: print short name
+      debug:
+        msg: "{{hostvars[inventory_hostname]}}"

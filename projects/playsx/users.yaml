@@ -1,0 +1,69 @@
+---
+- name: local play for keys
+  hosts: localhost
+  vars_files:
+    - vars/user_list.yaml
+    - vars/secret.yaml
+  become: true
+  tasks:
+
+    - name: create users locally
+      user: 
+        name: "{{item.username}}"
+        generate_ssh_key: yes
+      loop: "{{users}}"
+
+
+
+    - name: create files directory
+      file:
+        state: directory
+        path: /home/automation/files/{{item.username}}
+      loop: "{{users}}"
+
+    - name: copy keys from user homes to files
+      shell:
+        cmd: "cp /home/{{item.username}}/.ssh/id_rsa.pub  /home/automation/files/{{item.username}}"
+      loop: "{{users}}"
+
+- name: Playbook to create users
+  become: true
+  hosts: webservers,database
+  vars_files:
+    - vars/user_list.yaml
+    - vars/secret.yaml
+  tasks:
+
+    - name: Create users on webservers
+      user:
+        name: "{{item.username}}"
+        uid: "{{item.uid}}"
+        password: "{{user_password | password_hash('sha512', 'pepper')}}"
+        shell: "{{userShell}}"
+        groups: "wheel"
+        append: yes
+      loop: "{{users}}"
+      when: 
+        - " item.uid is regex('^1') "
+        - " 'webservers' in group_names "
+
+    - name: Create users on database server
+      user:
+        name: "{{item.username}}"
+        uid: "{{item.uid}}"
+        password: "{{user_password | password_hash('sha512', 'pepper')}}"
+        shell: "{{userShell}}"
+        groups: "wheel"
+        append: yes
+      loop: "{{users}}"
+      when:
+        - " item.uid is regex('^2') "
+        - " 'database' in group_names "
+     
+    - name: copy authorized key
+      authorized_key:
+        user: "{{item.username}}"
+        state: present
+        key: "{{lookup('file', '/home/automation/files/{{item.username}}/id_rsa.pub')}}"
+      loop: "{{users}}"
+

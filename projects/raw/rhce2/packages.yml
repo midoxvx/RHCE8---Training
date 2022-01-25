@@ -1,0 +1,37 @@
+---
+- name: testing package facts
+  hosts: localhost
+  become: true
+  tasks:
+     - name: install package
+       tags:
+         - install
+       yum: 
+         name: vsftpd
+         state: latest
+       
+
+
+     - name: gather facts
+       tags:
+        - always
+       package_facts:
+          manager: auto
+
+     - name: display facts
+       debug:
+         msg: "you have the right version homie"
+       when: ansible_facts['packages']['vsftpd'][0]['version'] is version('3.0.2', '>')
+
+
+
+     - name: Assert play
+       tags:
+        - assert
+       assert:
+         that:
+           - ansible_facts['packages']['vsftpd'][0]['version'] is version('3.0.2', '>')
+           - "'vsftpd' in ansible_facts['packages']"
+         success_msg: " You got it homie "
+         fail_msg: " you aint got shit"
+       

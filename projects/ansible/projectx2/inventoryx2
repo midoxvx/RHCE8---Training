@@ -1,0 +1,11 @@
+managed-node-1
+managed-node-2
+managed-node-3
+
+
+[cloudservers]
+managed-node-1
+managed-node-2
+
+[blacksheep]
+managed-node-3

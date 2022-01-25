@@ -1,0 +1,15 @@
+---
+- name: install mysql on database
+  hosts: database
+  tasks:
+
+    - name: create /rhce3 directory
+      file:
+        state: directory
+        path: /rhce3
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+
+    - name: import role
+      include_role:
+        name: sample-mysql

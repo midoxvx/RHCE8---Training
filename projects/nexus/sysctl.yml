@@ -1,0 +1,15 @@
+---
+- name: sysctl
+  hosts: all
+  tasks:
+
+  - name: Error
+    fail:
+      msg: "Server Memory less than needed"
+    when: ansible_facts['memtotal_mb'] < 1048
+
+  - name: systctl
+    sysctl:
+      name: vm.swappiness
+      value: '10'
+      state: present

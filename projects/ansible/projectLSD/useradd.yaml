@@ -1,0 +1,14 @@
+---
+- name: add new users
+  hosts: all
+  vars_files:
+    - variables/passwords
+    - variables/users
+  tasks:
+    - name: create user
+      user:
+        name: "{{item.name}}"
+        shell: "{{item.shell}}"
+      loop: "{{users}}"
+      notify: passwd set
+...

@@ -1,0 +1,21 @@
+---
+- name: just playing with tags
+  hosts: localhost
+  become: true
+  tasks:
+
+    - name: task 1
+      debug:
+        msg: "{% if ansible_facts['distribution'] | lower == 'redhat'%}hooray{%else%}meh{%endif%}"
+      tags:
+        - condition
+    - name: task 2
+      debug:
+        msg: "{%if ansible_facts['hostname'] | lower == 'control-node'%}MASTA!{%else%}Punk{%endif%}"
+      tags:
+        - condition
+    - name: task 3
+      debug:
+        msg: "I am happy to help"
+      tags:
+        - wgu

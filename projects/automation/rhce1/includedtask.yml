@@ -1,0 +1,3 @@
+- name: include me and i will be looped
+  debug:
+    msg: "{{loophole}}"

@@ -1,0 +1,22 @@
+---
+- name: testing yaml
+  become: true
+  hosts: localhost
+  tasks:
+
+    - name: get package facts
+      package_facts:
+        manager: auto
+      tags:
+        - always
+
+    - name: debug
+      debug:
+        msg: "{{ansible_facts['packages']['atk'] | selectattr('version', 'defined') | list}}"
+      tags:
+        - skip
+    - name: map
+      debug:
+        msg: "{{ansible_facts['packages']['zip'] | map(attribute='version')| list}}"
+      tags:
+        - last

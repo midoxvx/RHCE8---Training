@@ -1,0 +1,14 @@
+---
+
+- name: Enable httpd
+  hosts: cloudservers
+  tasks:
+    - name: Install packages
+      yum:
+        name: httpd
+        state: present
+    - name: Enable service
+      service:
+        state: started
+        name: httpd
+        enabled: true

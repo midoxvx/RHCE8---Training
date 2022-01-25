@@ -1,0 +1,15 @@
+---
+- name: selinux
+  hosts: webservers
+  tasks:
+ 
+
+    - name: manage-context
+      sefcontext:
+        setype: 'httpd_config_t'
+        target: '/webserver(.*/)?'
+        state: present
+    - name: restoreconfig
+      shell:
+        cmd: "restorecon -Rv /webserver"
+

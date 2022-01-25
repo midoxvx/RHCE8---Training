@@ -1,0 +1,29 @@
+---
+- name: Testing variables & facts
+  hosts: all
+  vars:
+    - checkout: "{{ lookup('file', '/tmp/lookupfile')}}"
+  tasks:
+    - name: block testing
+      block:
+        - name: Print first message
+          debug:
+            var: checkout
+
+        - name: Print second message
+          debug:
+            msg: "My name is: {{name}}"
+
+        - name: Print third variable with the default filter
+          debug:
+            msg: "My name is: {{name2|default('Meltem')}}"
+      when: ansible_facts['distribution'] == "RedHat"
+      rescue:
+        - name: Rescue mode
+          debug:
+            msg: "This won't print unless we fuck up"
+      
+      always:
+        - name: Always
+          debug:
+            msg: "End of playbook"

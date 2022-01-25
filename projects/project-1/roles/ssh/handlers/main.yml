@@ -1,0 +1,24 @@
+---
+
+- name: seboolhandler
+  seport:
+    ports: "{{ANSIBLE_SSH_PORT}}"
+    proto: tcp
+    state: present
+    setype: ssh_port_t
+
+- name: firewallhandler
+  firewalld:
+    port: "{{ANSIBLE_SSH_PORT}}/tcp"
+    immediate: yes
+    permanent: yes
+    state: enabled
+    zone: public
+
+- name: restartsshd
+  service:
+    name: sshd
+    state: restarted
+
+
+# handlers file for ssh

@@ -1,0 +1,25 @@
+---
+- name: Httpd installation
+  hosts: all
+  tasks:
+    - name : Install httpd package
+      yum:
+        name: 
+        - httpd
+        - firewalld
+        state: latest
+    - name: Enable service
+      service:
+        name: httpd
+        state: started
+        enabled: true
+    - name: Enable firewall
+      firewalld:
+        port: "443/tcp"
+        permanent: true
+        state: enabled
+    - name: Creating index file
+      copy:
+        content: "Mohie's first ansible web-page"
+        dest: /var/www/html/index.html
+...

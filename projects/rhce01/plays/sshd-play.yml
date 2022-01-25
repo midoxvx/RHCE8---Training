@@ -1,0 +1,17 @@
+---
+- name: call shhd role
+  hosts: localservers
+  become: true
+  vars:
+    - banner: "Banner /etc/motd"
+    - AllowedUsers: "AllowUsers rhce"
+
+
+  pre_tasks:
+    
+    - name: pretask
+      debug:
+        msg: "I am just pretasking"
+
+  roles:
+    - { role: sshd, when: "ansible_facts['distribution'] | lower == 'redhat'"}

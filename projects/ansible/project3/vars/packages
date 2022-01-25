@@ -1,0 +1,4 @@
+basicPackages:
+ - python3
+ - wget
+ - curl

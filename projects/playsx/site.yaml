@@ -1,0 +1,4 @@
+---
+
+- import_playbook: task1.yaml
+- import_playbook: task2.yaml

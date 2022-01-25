@@ -1,0 +1,12 @@
+---
+- name: testing templating conditionals
+  hosts: localhost
+  become: true
+  vars: 
+    - name: mdohie
+      age: 38
+  tasks:
+    - name: jinja templating runtime
+      debug: 
+        msg: "{%if name == 'mohie'%}WOOP{%else%}MEH{%endif%}"
+

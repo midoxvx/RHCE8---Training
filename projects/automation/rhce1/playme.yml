@@ -1,0 +1,13 @@
+---
+- name: just testing path
+  hosts: localhost
+  become: true
+  vars_files:
+   - variables/userslist
+  vars:
+   - mypath: /home/
+  tasks:
+    - name: print out keys
+      debug:
+        msg: "{{mypath ~item.username}}"
+      loop: "{{users}}"

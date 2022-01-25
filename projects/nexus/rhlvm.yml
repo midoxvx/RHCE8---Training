@@ -1,0 +1,26 @@
+---
+- name: lvm conditionals
+  hosts: all
+  tasks:
+
+    - name: checking if lvm exists
+      fail: 
+       msg: "{{inventory_hostname}} does not have this vg"
+      when: "ansible_facts['lvm']['vgs']['vg_rhce'] is not defined"
+
+
+    - name: creating lvms based on vg size
+      lvol:
+        vg: vg_rhce
+        lv: lv_rhce
+        size: 2g
+      when: ansible_facts['lvm']['vgs']['vg_rhce']['size_g'] | int < 6
+
+
+    - name: creating lvm based on vg size2
+      lvol:
+        vg: vg_rhce
+        lv: lv_rhce
+        size: 4g
+      when: ansible_facts['lvm']['vgs']['vg_rhce']['size_g'] | int >= 6
+

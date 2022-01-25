@@ -1,0 +1,74 @@
+---
+- name: installing httpd from scratch
+  hosts: cloud-node-1
+  become: yes
+  vars:
+    - webRoot: "/webx"
+  tasks:
+
+
+    - name: create webroot
+      file:
+        state: directory
+        path: "{{webRoot}}"
+    - name: install httpd package
+      yum:
+        name:
+          - httpd
+        state: latest
+
+    - name: configure vmhost
+      template:
+        src: vhost.j2
+        dest: /etc/httpd/conf.d/vhost.conf
+        force: yes
+
+    - name: configure
+      copy:
+        content: "Hello this websites ip is: {{ansible_facts['default_ipv4']['address']}}"
+        dest: "{{webRoot}}/index.html"
+
+    - name: replacehttp
+      replace:
+        path: "/etc/httpd/conf/httpd.conf"
+        after: '<Directory />'
+        before:  '</Directory>'
+        regexp: '^(.+)$'
+        replace:  ''
+      tags:
+        - regex
+
+    - name: service
+      service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: selinux (port & fcontext)
+      sefcontext:
+        target: "{{webRoot}}(./*)?"
+        setype: 'httpd_sys_content_t'
+        state: present
+    - name: selinux restoreconf
+      shell:
+        cmd: "restoreconf -Rv {{webRoot}}"
+    - name: seport
+      seport:
+        ports:
+          - 82
+          - 83
+        proto: tcp
+        setype: http_port_t
+        state: present
+
+      
+    - name: firewall
+      firewalld:
+        port: "{{item}}"
+        permanent: yes
+        state: present
+        immediate: yes
+      loop:
+        - 82
+        - 83
+...

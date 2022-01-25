@@ -1,0 +1,33 @@
+---
+- name: filters
+  vars_files:
+    - vars/interfaces.yaml
+  hosts: localhost
+  become: true
+  tasks:
+
+
+    - name: selectattr
+      debug:
+        msg: "{{interfaces | selectattr('ip_address', 'defined') |list | items2dict(key_name='description', value_name='ip_address')}}"
+      tags:
+        - select
+
+    - name: map
+      debug:
+        msg: "{{interfaces | map(attribute='ip_address') | list}}"
+      tags:
+        - map
+
+
+    - name: select2
+      debug:
+        msg: "{{interfaces | selectattr('name', 'in', '[vlan42]') | list}}"
+      tags:
+        - select2
+
+    - name: select3
+      debug:
+        msg: "{{interfaces | selectattr('name', 'equalto', 'vlan42') | list}}"
+      tags:
+        - select3

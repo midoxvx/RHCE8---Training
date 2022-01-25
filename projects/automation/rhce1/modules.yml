@@ -1,0 +1,18 @@
+---
+- name: testing some modules
+  hosts: localhost
+  become: true
+  tasks: 
+    
+    - name: stat a file and register output
+      stat: 
+        path: /etc
+      register: statOutput
+
+    - name: print output
+      debug:
+        msg: 'It is true!'
+      when: |
+         (statOutput['stat']['readable'] or statOutput['stat']['wrietable'])
+         and
+         (statOutput['stat']['isdir'])

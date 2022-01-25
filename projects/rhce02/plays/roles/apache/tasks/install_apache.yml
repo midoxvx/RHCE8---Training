@@ -1,0 +1,12 @@
+---
+- name: package installation
+  yum:
+    name: "{{apache_package}}"
+    state: latest
+
+- name: Deploy index.html file
+  copy:
+    content: "Welcome to {{ansible_facts['fqdn']}}"
+    dest: "{{web_root}}/index.html"
+    owner: "{{ansible_user}}"
+    group: "{{ansible_user}}"

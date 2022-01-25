@@ -1,0 +1,8 @@
+- hosts: webservers
+  vars:
+    timesync_ntp_servers:
+      - hostname: 132.163.96.5
+        pool: yes
+        iburst: yes
+  roles:
+    - rhel-system-roles.timesync

@@ -1,0 +1,19 @@
+---
+- name: deploy apache servers
+  hosts: webservers
+  tasks:
+
+    - name: install firewalld
+      yum:
+        name: firewalld
+        state: present
+
+    - name: enable firewalld
+      service:
+        name: firewalld
+        state: started
+        enabled: true
+
+    - name: include apache role
+      include_role:
+        name: sample-apache
